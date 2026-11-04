@@ -1,0 +1,8 @@
+# Only the website and its docs are published. Everything else in this folder is the client's raw
+# material (call recording, WhatsApp media, PDFs, source videos) and must never be committed.
+/*
+!/.gitignore
+!/README.md
+!/vercel.json
+!/website/
+!/docs/

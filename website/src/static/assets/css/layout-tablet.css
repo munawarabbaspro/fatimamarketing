@@ -1,0 +1,79 @@
+/* Tablet & small-laptop layout (≤1180px, ≤980px). Loaded after main.css; merged + inlined at build. */
+@media (max-width:1180px){
+  .hdr__tel{display:none}
+  .kp__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hl__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .soc-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ftr__grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .reviews__grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:980px){
+  :root{--hdr:66px}
+  .topbar{display:none}
+  .brand img{height:44px}
+  .burger{display:inline-flex;margin-left:auto}
+  .hdr__cta{display:none}
+  .nav{position:fixed;inset:var(--hdr) 0 0 0;background:var(--paper-2);padding:1rem var(--gut) 6rem;overflow-y:auto;transform:translateX(100%);visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s;margin:0}
+  .nav.is-open{transform:none;visibility:visible;transition:transform .3s ease}
+  .nav__list{flex-direction:column;align-items:stretch;gap:.1rem}
+  .nav__list>li>a,.nav__dd-btn{width:100%;justify-content:space-between;padding:.9rem .6rem;font-size:1.05rem;border-bottom:1px solid var(--line);border-radius:0}
+  .nav__list>li>a[aria-current]{background:transparent;color:var(--gold-3)}
+  .dd{position:static;translate:none;width:auto;box-shadow:none;border:0;padding:.4rem 0;display:none;opacity:1;visibility:visible;transform:none}
+  .has-dd.is-open .dd{display:block}
+  .dd__grid{grid-template-columns:minmax(0,1fr)}
+  .nav__mob-cta{display:grid;gap:.6rem;margin-top:1.4rem}
+  /* phones & tablets: the aerial loop sits in a wide panel at full sharpness; the copy starts on its faded edge */
+  .hero{min-height:auto}
+  .hero__media{position:relative;inset:auto;aspect-ratio:16/9}
+  .hero__shade{background:linear-gradient(180deg,rgba(10,11,14,.25) 0%,rgba(10,11,14,0) 30%,rgba(10,11,14,0) 62%,var(--ink) 100%)}
+  .hero__in{padding-top:0;margin-top:-1.6rem}
+  .hero h1{text-shadow:none}
+  .hero__bar-in{grid-template-columns:minmax(0,1fr);gap:1rem}
+  .hslide{grid-template-columns:minmax(0,1fr);gap:.5rem}
+  .hero__tabs{gap:.6rem}
+  .hero__tabs button{min-width:0;flex:1;font-size:.72rem}
+  .sec__head{flex-direction:column;align-items:flex-start;gap:1rem}
+  .soc-grid,.soc-grid--3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .towers__grid{grid-template-columns:minmax(0,1fr);max-width:560px;margin:0 auto}
+  .pcards{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .vids__grid{grid-template-columns:minmax(0,1fr)}
+  .vlist ul{max-height:none}
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .contact__grid,.faq-wrap,.office,.film__in,.about{grid-template-columns:minmax(0,1fr)}
+  .pgrid{grid-template-columns:minmax(0,1fr)}
+  .pgrid__side .sticky{position:static}
+  .tower{grid-template-columns:minmax(0,1fr)}
+  .social{grid-template-columns:minmax(0,1fr)}
+  .cards3{grid-template-columns:minmax(0,1fr)}
+  .trust__stats{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .calc{grid-template-columns:minmax(0,1fr)}
+  .mbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:58;background:var(--ink);border-top:1px solid var(--line-l);padding-bottom:env(safe-area-inset-bottom)}
+  .mbar a,.mbar button{display:grid;justify-items:center;gap:.15rem;padding:.6rem 0;color:#fff;font-size:.72rem;font-weight:700;text-decoration:none}
+  .mbar .i{width:22px;height:22px}
+  .mbar__wa{background:var(--wa)}
+  .fab-wa{display:none}
+  body{padding-bottom:64px}
+  html{scroll-padding-bottom:80px}
+}
+
+@media (max-width:1180px){
+  .kp__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .kpc{aspect-ratio:4/5}
+}
+
+@media (max-width:1180px){
+  .leaders{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Legibility floor on phones & tablets: no running text, label or chip below 12px. */
+@media (max-width:980px){
+  .plan-table th,.scard__tags em,.chip,.pcard__facts span,.plan-jump small,.plan__img span,.calc__total small,.mbar span,
+  .facts dt,.pcard__from small,.vrow__dur,.vrow__t small,.vrow__t em,.rcard small,.pgal__cap,.leader small,.chips small,
+  .contact__list small,.hcard__b small,.hero__tabs button,.office__photos figcaption,.agent small,.vtile__t,.faq-help small,
+  .plan-table thead th,.rcard figcaption small,.vtile--sm .vtile__t,.hero__tabs .n{font-size:12px}
+}
+
+@media (max-width:980px){
+  /* the enquiry section is a form on phones/tablets: a plain ink background reads better than a 30% photo stretched tall */
+  .contact__bg{display:none}
+}

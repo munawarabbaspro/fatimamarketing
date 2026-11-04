@@ -1,0 +1,210 @@
+{
+ "$schema": "https://openapi.vercel.sh/vercel.json",
+ "framework": null,
+ "installCommand": "",
+ "buildCommand": "node website/build.mjs",
+ "outputDirectory": "website/dist",
+ "cleanUrls": true,
+ "trailingSlash": true,
+ "redirects": [
+  {
+   "source": "/:path(.*)",
+   "has": [
+    {
+     "type": "host",
+     "value": "fgoc.pk"
+    }
+   ],
+   "destination": "https://fatimamarketing.com/:path",
+   "permanent": true
+  },
+  {
+   "source": "/:path(.*)",
+   "has": [
+    {
+     "type": "host",
+     "value": "www.fgoc.pk"
+    }
+   ],
+   "destination": "https://fatimamarketing.com/:path",
+   "permanent": true
+  },
+  {
+   "source": "/about-us/",
+   "destination": "/about/",
+   "permanent": true
+  },
+  {
+   "source": "/fatima-marketing/",
+   "destination": "/about/",
+   "permanent": true
+  },
+  {
+   "source": "/fatima-associates/",
+   "destination": "/about/",
+   "permanent": true
+  },
+  {
+   "source": "/fatima-construction-builders/",
+   "destination": "/about/",
+   "permanent": true
+  },
+  {
+   "source": "/top-city/",
+   "destination": "/projects/top-city-1/",
+   "permanent": true
+  },
+  {
+   "source": "/mumtaz-city/",
+   "destination": "/projects/mumtaz-city/",
+   "permanent": true
+  },
+  {
+   "source": "/gandhara-city/",
+   "destination": "/projects/gandhara-city/",
+   "permanent": true
+  },
+  {
+   "source": "/kingdom-valley/",
+   "destination": "/projects/kingdom-valley/",
+   "permanent": true
+  },
+  {
+   "source": "/park-view-city/",
+   "destination": "/projects/park-view-city/",
+   "permanent": true
+  },
+  {
+   "source": "/blue-world-city-plot-for-sale-in-blue-word-city-islamabad/",
+   "destination": "/projects/blue-world-city/",
+   "permanent": true
+  },
+  {
+   "source": "/taj-residencia/",
+   "destination": "/projects/taj-residencia/",
+   "permanent": true
+  },
+  {
+   "source": "/b17-multi-gardens/",
+   "destination": "/projects/multi-gardens-b17/",
+   "permanent": true
+  },
+  {
+   "source": "/capital-smart-city-islmabad/",
+   "destination": "/projects/capital-smart-city/",
+   "permanent": true
+  },
+  {
+   "source": "/2022/02/02/capital-smart-city-islamabad/",
+   "destination": "/projects/capital-smart-city/",
+   "permanent": true
+  },
+  {
+   "source": "/residential-projects/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/commercial-projects/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/property/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/plot-for-sale-in-islamabad-on-installments/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/2022/02/02/cda-approved-housing-societies/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/2022/02/02/cda-issues-tenders-for-the-development-works-of-sector-e-12-4/",
+   "destination": "/",
+   "permanent": true
+  },
+  {
+   "source": "/blog/",
+   "destination": "/",
+   "permanent": true
+  },
+  {
+   "source": "/7-wonders-city/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/eighteen-islamabad/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/gulberg-islamabad/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/ichs-town/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/kmk-tower/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/rose-heights/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/rudn-enclave/",
+   "destination": "/projects/",
+   "permanent": true
+  },
+  {
+   "source": "/university-town/",
+   "destination": "/projects/",
+   "permanent": true
+  }
+ ],
+ "headers": [
+  {
+   "source": "/assets/(.*)",
+   "headers": [
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=31536000, immutable"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)",
+   "headers": [
+    {
+     "key": "X-Content-Type-Options",
+     "value": "nosniff"
+    },
+    {
+     "key": "Referrer-Policy",
+     "value": "strict-origin-when-cross-origin"
+    },
+    {
+     "key": "X-Frame-Options",
+     "value": "SAMEORIGIN"
+    },
+    {
+     "key": "Permissions-Policy",
+     "value": "camera=(), microphone=(), geolocation=()"
+    }
+   ]
+  }
+ ]
+}

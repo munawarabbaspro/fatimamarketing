@@ -1,0 +1,68 @@
+/* Phone layout (≤640px) and small phones (≤380px). Loaded last; merged + inlined at build. */
+@media (max-width:640px){
+  body{font-size:16px}
+  .kp__grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.7rem}
+  .kp__item{padding:1.1rem .9rem}
+  .kp__item:last-child{grid-column:span 2}
+  .hl__grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .hl__grid .hcard:last-child{grid-column:span 2;aspect-ratio:16/10}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .soc-grid,.soc-grid--3{grid-template-columns:minmax(0,1fr)}
+  .pcards{grid-template-columns:minmax(0,1fr)}
+  .vgrid{grid-template-columns:minmax(0,1fr)}
+  .bento__item--xl{grid-column:span 2;grid-row:span 1;aspect-ratio:16/10}
+  .pgal,.pgal--2,.pgal--3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .pgal__item--xl,.pgal--3 .pgal__item--xl,.pgal--2 .pgal__item--xl{grid-column:span 2;grid-row:span 1;aspect-ratio:16/10}
+  .hero__proof{gap:.5rem 1rem}
+  .hero__tabs .n{display:none}
+  .hslide__btns .btn{flex:1}
+  .plan__head{grid-template-columns:minmax(0,1fr)}
+  .plan__img{max-width:240px}
+  .plan{padding:1.1rem}
+  .step{grid-template-columns:12px 1fr auto;font-size:.84rem}
+  .step__p{display:none}
+  .ticks--2{grid-template-columns:minmax(0,1fr)}
+  .units{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)}
+  .phero__row{flex-direction:column;align-items:flex-start;gap:1rem}
+  .badge--lg{width:80px;height:80px}
+  .ftr__grid{grid-template-columns:minmax(0,1fr)}
+  .cta-band__in{flex-direction:column;align-items:flex-start}
+  .modal__x{top:8px;right:8px}
+  .rcard{width:290px}
+  .plan-cta{flex-direction:column}
+  .social__go{display:none}
+}
+
+@media (max-width:640px){
+  /* key points become a swipeable row of photo cards */
+  .kp__grid{display:flex;gap:.8rem;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--gut)*-1);padding:0 var(--gut) .6rem;scrollbar-width:none}
+  .kp__grid::-webkit-scrollbar{display:none}
+  .kpc{flex:0 0 78%;aspect-ratio:4/5;scroll-snap-align:center}
+  .player__time{display:none}
+  .pb--back{display:none}
+  .player__label{top:calc(50% + 56px);font-size:.8rem}
+  .player__bar{left:8px;right:8px;bottom:8px}
+  .plan-cta__img{width:100%;aspect-ratio:16/9}
+}
+
+@media (max-width:640px){
+  .leaders{grid-template-columns:minmax(0,1fr)}
+}
+
+@media (max-width:640px){
+  .hero__media{aspect-ratio:2/1}
+}
+
+@media (max-width:640px){
+  /* page heroes: the photo becomes a sharp 2:1 band (a wide frame behind a tall text block would be blown up); text starts on its faded edge */
+  .phero--img,.phero--project.phero--img{padding-top:0}
+  .phero--img .phero__bg{position:relative;inset:auto;aspect-ratio:2/1;margin-bottom:-1.6rem}
+  .phero--img .phero__bg::after{background:linear-gradient(180deg,rgba(15,17,21,.2) 0%,rgba(15,17,21,0) 35%,rgba(15,17,21,0) 55%,var(--ink) 100%)}
+  .phero--img h1{text-shadow:none}
+}
+
+@media (max-width:640px){
+  /* tall sections on phones: the photo becomes a sharp band at the top instead of a blown-up full background */
+  .trust__bg{inset:0 0 auto;aspect-ratio:16/9}
+  .trust__bg::after{background:linear-gradient(180deg,rgba(15,17,21,.35),var(--ink))}
+}
