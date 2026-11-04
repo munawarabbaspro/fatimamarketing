@@ -72,6 +72,8 @@ export const site = {
     { name: 'Technical team', text: 'Verifies maps, NOC status, possession and development progress on site.' },
     { name: 'Accounts & Administration', text: 'Handles payment schedules, receipts and documentation with developers.' },
   ],
+  // Footer credit line (the web developer)
+  credit: { by: 'Data X Technologies', place: 'Blue Area, Islamabad' },
   // Lead delivery. WhatsApp always works; email delivery needs a free Web3Forms key
   // (https://web3forms.com → create key with fatimamarketing.isb@gmail.com → paste below).
   forms: {

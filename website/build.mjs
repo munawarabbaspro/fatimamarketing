@@ -353,7 +353,8 @@ const footer = () => `<footer class="ftr"><div class="wrap ftr__grid">
     <li>${ico('mail')}<a href="mailto:${site.email}">${site.email}</a></li>
     ${site.hours ? `<li>${ico('clock')}<span>${esc(site.hours)}</span></li>` : ''}</ul></div>
 </div>
-<div class="ftr__bar"><div class="wrap ftr__bar-in"><span>© ${new Date().getFullYear()} ${esc(site.name)} · ${esc(site.group.name)}. All rights reserved.</span><span>Prices & payment plans are set by developers and may change without notice.</span></div></div></footer>
+<div class="ftr__bar"><div class="wrap ftr__bar-in"><span>© ${new Date().getFullYear()} ${esc(site.name)} · ${esc(site.group.name)}. All rights reserved.</span><span>Prices & payment plans are set by developers and may change without notice.</span></div>
+  <p class="ftr__credit">Designed &amp; developed by <b>${esc(site.credit.by)}</b> <span>· ${esc(site.credit.place)}</span></p></div></footer>
 <nav class="mbar" aria-label="Quick contact"><a href="tel:${site.phones.uan.tel}">${ico('phone')}<span>Call</span></a><a class="mbar__wa" href="${waLink(WA_HELLO)}" target="_blank" rel="noopener">${brand('wa', 'i')}<span>WhatsApp</span></a><button type="button" data-enquire="General enquiry">${ico('mail')}<span>Enquire</span></button></nav>
 <a class="fab-wa" href="${waLink(WA_HELLO)}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">${brand('wa', 'i')}</a>
 <dialog class="modal" id="enquire-modal" aria-label="Enquiry form"><button class="modal__x" type="button" data-close aria-label="Close">${ico('close')}</button>${enquiryForm({ title: 'Get details & payment plan', sub: 'Tell us what you are looking for. We reply on WhatsApp.', variant: 'enquiry--modal' })}</dialog>
