@@ -88,7 +88,7 @@ def cta_card():
     return title_card([
         ('Book a free site visit today', SERIF(54), WHITE),
         ('UAN 0331-1111057   ·   WhatsApp 0335-7777901', SANS(34, 750), YEL),
-        ('Office 111, 1st Floor, Capital Business Center, F-10 Markaz, Islamabad', SANS(24, 500), (220, 220, 220)),
+        ('Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz, Islamabad', SANS(24, 500), (220, 220, 220)),
     ], logo_w=430, y0=95)
 
 def save(im, name):

@@ -95,7 +95,7 @@ WhatsApp renders `*text*` as bold. The reference ID lets the team match WhatsApp
 | Email copies of leads | Add a free Web3Forms access key (5 minutes, see README) |
 | Team list | From FGC's 2023 site; confirm current titles |
 | Domain | Default `fatimamarketing.com` (from their Google profile); fgoc.pk redirects to it. Confirm both are controlled by the client |
-| Office address | Google says Office 111 Capital Business Center; a Sept 2026 video ticker says Office No.01 Allied Plaza. Confirm which is current |
+| Office address | **Resolved:** Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz (user-confirmed). Client to update Google Business Profile |
 
 
 ## 6. Phase 2 redesign: new checks and defects fixed (3 Nov 2026)
@@ -170,4 +170,4 @@ Mobile performance before Phase 3 was 69–95 (home 69: the hero video was being
 
 New media fixes: native 1920 px 3:1 page-header banners on large screens (`tools/make_banners.py`); the enquiry section's background photo is hidden on phones/tablets and the trust photo becomes a sharp band; two hazy gallery frames removed.
 
-Still open (client): current Harmony Park schedule; office hours; leadership titles/descriptions; office address (Allied Plaza vs Capital Business Center).
+Decided without the client (see `01-requirements-notes.md` §9): address = Allied Plaza (user-confirmed); hours hidden until known; Harmony Park kept and labelled expired; leadership and key-point wording kept.

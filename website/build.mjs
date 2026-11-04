@@ -679,7 +679,7 @@ write('/about/', page({
 // Contact
 write('/contact/', page({
   path: '/contact/', title: 'Contact Fatima Marketing: UAN 0331-1111057',
-  desc: 'Contact Fatima Marketing, Office 111, Capital Business Center, F-10 Markaz Islamabad. UAN 0331-1111057 · WhatsApp 0335-7777901 · fatimamarketing.isb@gmail.com.',
+  desc: 'Contact Fatima Marketing, Office No. 01, Allied Plaza, F-10 Markaz Islamabad. UAN 0331-1111057 · WhatsApp 0335-7777901 · fatimamarketing.isb@gmail.com.',
   ld: [ldCrumbs([['Home', '/'], ['Contact', '/contact/']])],
   body: `<section class="phero phero--img"><div class="phero__bg">${pic('blue-world-city-3', '', { eager: true, sizes: '100vw', pos: '50% 55%' })}</div><div class="wrap phero__in">${breadcrumbs([['Home', '/'], ['Contact', '/contact/']])}<h1>Contact us</h1><p>Call, WhatsApp, email or visit our office in F-10 Markaz. We answer every enquiry.</p></div></section>
   ${contactSec()}

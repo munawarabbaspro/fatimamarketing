@@ -19,7 +19,7 @@ Sources studied (2026-11-02):
 | CEO | Ejaz Khokhar | fgoc.pk/about-us (2023) |
 | CFO | Riaz Khokhar | " |
 | Directors | Mudasar Khokhar (Coordination), Ayyan Khokhar (HR), Haris Aziz (IT) | " |
-| Office | Office 111, 1st Floor, Capital Business Center, F-10 Markaz, Islamabad | fgoc.pk |
+| Office | **Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz, Islamabad** | Confirmed by the user (Nov 2026); matches the Sept 2026 video ticker. The old address (Office 111, Capital Business Center) came from fgoc.pk and Google |
 | UAN / Call | **0331-1111057** (also 0331-1111058) | notes, client call, every video watermark |
 | WhatsApp | **0335-7777901**, confirmed: notes, slowed call audio, and their Sept 2026 video ticker (“Contact us 0335-7777-901”) | notes / call / video |
 | Gmail | **fatimamarketing.isb@gmail.com** | fgoc.pk footer + mailto links |
@@ -35,7 +35,7 @@ Sources studied (2026-11-02):
 
 ⚠ `fatimarealestate.pk` / FB "Fatima Real Estate & Marketing" is a **different business in Shikarpur, Sindh**. Do NOT link it.
 ⚠ fgoc.pk is offline (403/404 + wrong SSL cert). It redirects to fatimamarketing.com in the hosting config.
-⚠ **Address to confirm:** the Sept 2026 Airport Green Garden video ticker shows “Office No.01, First Floor, Allied Plaza, F-10 Markaz”, while Google and every other source say Office 111, Capital Business Center. The site uses Capital Business Center until the client confirms a move.
+✅ **Address resolved:** Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz (confirmed by the user). Action for the client: update the Google Business Profile address to match, because name, address and phone must be identical everywhere for local SEO.
 
 ## 2. Template → Fatima Marketing mapping (notes + call)
 
@@ -122,3 +122,16 @@ Image and asset credits: society and team photos are frames from Fatima Marketin
 | PageSpeed 100 on all four categories | See `03-uat-report.md` §7 for the scores and what was changed |
 
 Photo sources added in this phase: "Islamabad International Airport 2022" (Pr0pulsion 123, Wikimedia Commons, CC0; original kept in `website/tools/src-assets/`); the Fatima Associates office and signboard (client's video `03xNB3_qwBw`); the team meeting (client's video `cQIPSbpFQGk`).
+
+## 9. Decisions taken without the client (user: "decide on your own")
+
+| Item | Decision |
+|---|---|
+| Office address | Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz, Islamabad (user-confirmed). Site, structured data, maps and the brand film's end card updated. The Google Business Profile still shows the old address and should be updated by the client |
+| Office hours | Not shown: no verified source; publishing wrong hours is worse than none. Add `hours` in `src/data/site.mjs` when known |
+| Harmony Park schedule (July 2026) | Kept, clearly labelled as expired with "ask us for the current rate"; the plan structure is still useful to buyers |
+| 5 key points wording | Kept the current wording |
+| Leadership titles and descriptions | Kept as published (titles from fgoc.pk; descriptions factual and modest) |
+| D-17 vs Multi Gardens B-17 | Both pages kept |
+| Faisal Town link / society bios | Pages use the verified facts already researched |
+| Email copies of enquiries (Web3Forms) | Left off: needs a key created with the client's Gmail. Enquiries go to WhatsApp, which always works |

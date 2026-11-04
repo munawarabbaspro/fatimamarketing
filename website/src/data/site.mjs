@@ -18,16 +18,16 @@ export const site = {
   },
   email: 'fatimamarketing.isb@gmail.com',
   address: {
-    line1: 'Office 111, 1st Floor, Capital Business Center',
+    line1: 'Office No. 01, 1st Floor, Allied Plaza',
     line2: 'F-10 Markaz, Islamabad',
-    street: 'Office 111, 1st Floor, Capital Business Center, F-10 Markaz',
+    street: 'Office No. 01, 1st Floor, Allied Plaza, F-10 Markaz',
     city: 'Islamabad',
     region: 'Islamabad Capital Territory',
     postal: '44000',
     country: 'PK',
     // F-10 Markaz centroid from OpenStreetMap (Markaz-level precision).
     geo: { lat: 33.6958973, lng: 73.0124707 },
-    mapQuery: 'Capital Business Centre, F-10 Markaz, Islamabad',
+    mapQuery: 'Allied Plaza, F-10 Markaz, Islamabad',
   },
   hours: '', // ⚠ client to provide office hours; hidden until filled (e.g. 'Mon – Sat, 10:00 am – 7:00 pm')
   social: {
@@ -105,7 +105,7 @@ export const highlights = [
 export const faqs = [
   {
     q: 'What does Fatima Marketing do?',
-    a: 'Fatima Marketing is the real estate marketing arm of Fatima Group of Companies (FGC), based at Capital Business Center, F-10 Markaz, Islamabad. We help clients book, buy, sell and transfer plots, houses, villas, apartments and commercial units in leading societies of Islamabad and Rawalpindi.',
+    a: 'Fatima Marketing is the real estate marketing arm of Fatima Group of Companies (FGC), based at Allied Plaza, F-10 Markaz, Islamabad. We help clients book, buy, sell and transfer plots, houses, villas, apartments and commercial units in leading societies of Islamabad and Rawalpindi.',
   },
   {
     q: 'Which housing societies do you deal in?',
@@ -141,7 +141,7 @@ export const faqs = [
 // (5.0 ★ from 22 reviews, read 2026-11-03). Quoted verbatim (only doubled spaces removed); reviewer names as shown publicly on Google.
 export const googleProfile = {
   rating: '5.0', count: 22,
-  url: 'https://www.google.com/maps/search/?api=1&query=Fatima+Marketing+Capital+Business+Center+F-10+Markaz+Islamabad',
+  url: 'https://www.google.com/maps/search/?api=1&query=Fatima+Marketing+F-10+Markaz+Islamabad',
 };
 export const testimonials = [
   { name: 'Muhammad Salman', meta: '7 reviews · 7 photos', text: 'I had an exceptional experience working with Fatima Marketing. From the moment I reached out to them, their team was highly responsive and professional. They guided me through the entire process with expertise, making buying a new home a smooth and enjoyable journey. I highly recommend Fatima Marketing to anyone looking for top-notch service and support in the real estate market.', verified: true },
