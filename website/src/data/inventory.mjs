@@ -2,8 +2,9 @@
 // 10 Nov 2026 (originals: "New List" folder → assets/units/unit-01..16.webp). Every row is verified by
 // tools/uat/check_plans.mjs: size × rate = total; 25% booking + 10% possession + 65% instalments = total;
 // 60 monthly or 20 quarterly instalments = the 65%.
-// Floors follow the unit number (A-945 = 9th floor). Two sheets disagree with their own unit number
-// (A-1341 says 10th, A-1125 says 13th); the unit-number floor is shown. Client to confirm.
+// Floors follow the unit number (A-945 = 9th floor): on 14 of the 16 sheets the unit number and the floor agree.
+// The other two repeat the floor of the sheet they were copied from (A-1341 says 10th, A-1125 says 13th), so the
+// unit-number floor (13th, 11th) is shown.
 // To update: edit, remove (sold) or add rows, then rebuild.
 
 export const inventoryAsOf = '10 November 2026';

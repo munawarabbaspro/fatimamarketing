@@ -80,7 +80,7 @@ export const projects = [
     slug: 'mumtaz-city',
     name: 'Mumtaz City',
     seoTitle: 'Mumtaz City Islamabad: The Pearl, Sofia Sapphire',
-    metaDesc: 'Mumtaz City Islamabad near M-1/M-2 & New Airport: plots plus The Pearl, ICON VIII & Sofia Sapphire apartments. Watch videos and enquire today.',
+    metaDesc: 'Mumtaz City Islamabad near M-1/M-2 & New Airport: plots, Sofia Sapphire, and The Pearl & ICON VIII apartments available from Rs 80 Lac on a 5-year plan.',
     logo: null, mono: 'MC',
     area: 'M-1/M-2 interchange · Srinagar Highway',
     location: 'Next to the Islamabad–Rawalpindi motorway interchange (M-1/M-2) and Pind Nasrala, 5–10 minutes from New Islamabad International Airport',
@@ -98,9 +98,9 @@ export const projects = [
     sizes: { 'Residential plots': ['5 Marla', '8 Marla', '10 Marla', '14 Marla', '1 Kanal'], 'Apartments': ['Studio', '2 Bed', '3 Bed (Sofia Sapphire)'], 'Commercial': ['Shops & offices (The Pearl, ICON VIII)'] },
     amenities: ['Gated community with 24/7 security', 'Grand mosque', 'Underground electrification', 'Water, gas & electricity', 'Education complex & health facilities', 'Community centre & club house', 'Sports complex'],
     sub: [
-      { name: 'The Pearl', kicker: 'High-rise · Mumtaz City', text: 'A landmark residential and commercial high-rise on Mumtaz City’s main commercial frontage, near the M-1/M-2 interchange and minutes from New Islamabad International Airport.', video: 'pearl-mumtaz-city.mp4', poster: 'pearl-tower-day', images: ['pearl-tower-day', 'pearl-facade', 'pearl-podium', 'pearl-night'] },
+      { name: 'The Pearl', kicker: 'High-rise · Mumtaz City', text: 'A landmark residential and commercial high-rise by SA Global on Mumtaz City’s main commercial frontage, near the M-1/M-2 interchange and minutes from New Islamabad International Airport. Studio, 1-bedroom and 2-bedroom apartments on a 5-year instalment plan.', video: 'pearl-mumtaz-city.mp4', poster: 'pearl-tower-day', images: ['pearl-tower-day', 'pearl-facade', 'pearl-podium', 'pearl-night'] },
       { name: 'Sofia Sapphire', kicker: 'Victorian residences · Executive block', text: 'Victorian-architecture apartments on a three-sided corner with park frontage in Mumtaz City’s Executive block, with studio, 2-bed and 3-bed layouts, a pool deck and a domed palace façade. The ground-breaking ceremony took place in January 2026.', video: 'sofia-sapphire-film.mp4', poster: 'sofia-palace-facade', images: ['sofia-victorian-exterior', 'sofia-domes', 'sofia-pool-deck', 'sofia-2bed-bedroom', 'sofia-3bed-dining', 'sofia-studio-bedroom'], units: [{ name: 'Studio apartment', video: 'sofia-sapphire-studio.mp4', poster: 'sofia-studio-3d-plan' }, { name: '2-Bed apartment', video: 'sofia-sapphire-2-bed.mp4', poster: 'sofia-2bed-3d-plan' }, { name: '3-Bed apartment', video: 'sofia-sapphire-3-bed.mp4', poster: 'sofia-3bed-3d-plan' }] },
-      { name: 'ICON VIII', kicker: 'Mixed-use tower · Mumtaz City', text: 'A mixed-use tower with a double-height lobby, retail podium and serviced residences, positioned on a prime corner of Mumtaz City.', video: 'icon-mumtaz-city.mp4', poster: 'icon-facade', images: ['icon-aerial', 'icon-facade', 'icon-lobby', 'icon-night'] },
+      { name: 'ICON VIII', kicker: 'Mixed-use tower · Mumtaz City', text: 'A mixed-use tower by Mumtaz Construction Company (MCC), the developer of Mumtaz City: apartments above a retail podium with a double-height lobby, on a main-road corner. Security, water, electricity, gas, lifts and parking, with registry on possession.', video: 'icon-mumtaz-city.mp4', poster: 'icon-facade', images: ['icon-aerial', 'icon-facade', 'icon-lobby', 'icon-night'] },
     ],
     videos: [
       { yt: '_YIQRRaqIq8', title: 'The Pearl Mumtaz City Islamabad', date: '2026-10-13', dur: 30 },

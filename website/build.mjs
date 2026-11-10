@@ -612,6 +612,16 @@ const unitsBlock = () => {
   <div class="filters filters--units" role="group" aria-label="Filter units" data-filter-group="units">${keys.map(([k, l], i) => `<button type="button" data-filter="${k}" aria-pressed="${i === 0}">${l} <span>${count(k)}</span></button>`).join('')}</div>
   <ul class="ugrid" data-filter-target="units">${units.map(unitCard).join('')}</ul></section>`;
 };
+// FAQs generated from the inventory, so prices in the answers always match the unit cards
+const unitFaqs = () => {
+  const g = unitGroups(), from = (k) => Math.min(...g.find((x) => x.key === k).list.map((u) => u.total));
+  const n = (t) => units.filter((u) => u.tower === t).length, ex = units[0];
+  return [
+    { q: 'Which apartments are available in The Pearl and ICON VIII?', a: `As of ${inventoryAsOf}: ${n('the-pearl')} units in The Pearl (studios from Rs ${pkr(from('the-pearl-studio'))}, 1-bedroom at Rs ${pkr(from('the-pearl-1-bed'))} and 2-bedroom from Rs ${pkr(from('the-pearl-2-bed'))}) and ${n('icon-viii')} one-bedroom apartments in ICON VIII from Rs ${pkr(from('icon-viii-1-bed'))}. Every unit is listed under Available units on this page; units sell fast, so confirm on WhatsApp before paying.` },
+    { q: 'What is the payment plan for The Pearl and ICON VIII?', a: `Both follow the developer’s 5-year plan: 25% on booking, 10% on possession and 65% in 60 monthly or 20 quarterly instalments. For example, The Pearl ${ex.type.toLowerCase()} ${ex.unit} (${sq(ex.sqft)} sq ft, ${rs(ex.total)}) is ${rs(ex.booking)} on booking and then ${rs(ex.monthly)} a month.` },
+    { q: 'Who is developing The Pearl and ICON VIII?', a: 'According to the developers’ sales material, The Pearl is a project of SA Global and ICON VIII is built by Mumtaz Construction Company (MCC), the developer of Mumtaz City. ICON VIII offers registry on possession.' },
+  ];
+};
 const ldUnits = () => ({ '@context': 'https://schema.org', '@type': 'ItemList', name: 'Available units: The Pearl & ICON VIII, Mumtaz City',
   itemListElement: units.map((u, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Offer', name: `${unitTowers[u.tower].name} ${u.type}, unit ${u.unit}`, price: u.total, priceCurrency: 'PKR', availability: 'https://schema.org/InStock', url: abs('/projects/mumtaz-city/#units'), seller: { '@id': orgId },
     itemOffered: { '@type': 'Apartment', name: `${unitTowers[u.tower].name}, Mumtaz City: unit ${u.unit}`, floorLevel: String(u.floor), floorSize: { '@type': 'QuantitativeValue', value: u.sqft, unitCode: 'FTK' }, ...(typeKey(u.type) === 'studio' ? {} : { numberOfBedrooms: +u.type[0] }) } } })) });
@@ -653,6 +663,7 @@ for (const p of projects) {
   const path = `/projects/${p.slug}/`;
   const crumbs = [['Home', '/'], ['Projects', '/projects/'], [p.name, path]];
   const planList = (p.plans || []).map((s) => planBySlug[s]);
+  if (p.slug === 'mumtaz-city' && !p.faqs.some((f) => f.q.startsWith('Which apartments are available in The Pearl'))) p.faqs = [...unitFaqs(), ...p.faqs];
   const ld = [ldCrumbs(crumbs), ldPlace(p), ldFaq(p.faqs), ...p.videos.map(ldYt), ...(p.slug === 'mumtaz-city' ? [ldUnits()] : [])];
   if (p.sub) p.sub.forEach((s) => ld.push(ldLocalVideo({ title: `${s.name}, ${p.name} Islamabad`, desc: s.text, src: s.video, poster: s.poster, date: localMeta[s.name][0], dur: localMeta[s.name][1] })));
   const subnav = [['overview', 'Overview'], ['photos', 'Photos'], ['location', 'Location'], ...(p.sub ? [['towers', 'Towers']] : []), ...(p.slug === 'mumtaz-city' ? [['units', 'Available units']] : []), ['plots', 'Plots'], ['plans', 'Payment plans'], ...(p.videos.length ? [['videos', 'Videos']] : []), ['faq', 'FAQ'], ['enquire', 'Enquire']];
@@ -687,7 +698,7 @@ for (const p of projects) {
         <ul class="plan-jump">${planList.map((pl) => `<li><a href="#${pl.slug}">${esc(pl.title.split(':')[0])}<small>from Rs ${pkr(planFrom(pl))}</small></a></li>`).join('')}</ul>
         ${planList.map((pl) => planBlock(pl)).join('')}
         <div class="terms"><h3>General terms (Future Developments Holdings)</h3><ul>${cscTerms.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div></section>`
-      : `<section id="plans" class="psec plan-cta" data-reveal><span class="plan-cta__img">${pic(p.cover, '', { sizes: '160px' })}</span><div><h2 class="h2">${esc(p.name)} payment plan</h2><p>Developers revise ${esc(p.name)} prices and offers often. Get the <strong>current payment plan, available plots and prime-location charges</strong> on WhatsApp in minutes.</p><div class="plan__cta"><button class="btn btn--gold" type="button" data-enquire="${esc(p.name)}" data-interest="Latest payment plan">Request payment plan</button><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please send the latest ${p.name} payment plan.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Get it on WhatsApp</a></div></div></section>`}
+      : `<section id="plans" class="psec plan-cta" data-reveal><span class="plan-cta__img">${pic(p.cover, '', { sizes: '160px' })}</span><div><h2 class="h2">${esc(p.name)} payment plan</h2><p>${p.slug === 'mumtaz-city' ? `For The Pearl and ICON VIII, every available unit and its instalments are listed <a href="#units">above</a>. For plots, ` : ''}Developers revise ${esc(p.name)} prices and offers often. Get the <strong>current payment plan, available plots and prime-location charges</strong> on WhatsApp in minutes.</p><div class="plan__cta"><button class="btn btn--gold" type="button" data-enquire="${esc(p.name)}" data-interest="Latest payment plan">Request payment plan</button><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please send the latest ${p.name} payment plan.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Get it on WhatsApp</a></div></div></section>`}
       ${p.videos.length ? `<section id="videos" class="psec"><h2 class="h2">${esc(p.name)} videos & site visits</h2><p class="muted">Recorded by Fatima Marketing on site.</p><div class="vgrid">${p.videos.map((v) => vcard({ ...v, project: p }, { society: null })).join('')}</div></section>` : ''}
       <section id="faq" class="psec"><h2 class="h2">${esc(p.name)} FAQs</h2>${faqList(p.faqs, `faq-${p.slug}`)}</section>
       <section class="psec related"><h2 class="h2">Related projects</h2><ul class="soc-grid soc-grid--3">${p.related.map((s, i) => scard(bySlug[s], { i })).join('')}</ul></section>
