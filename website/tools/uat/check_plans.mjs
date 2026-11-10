@@ -1,6 +1,7 @@
 // Arithmetic check of every payment-plan row: down payment + confirmation + installments must equal the price.
 // node tools/uat/check_plans.mjs
 import { plans } from '../../src/data/plans.mjs';
+import { units } from '../../src/data/inventory.mjs';
 const n = (s) => Number(String(s).split('(')[0].replace(/[^0-9]/g, ''));
 let bad = 0, rows = 0;
 const ok = (label, expect, got, tol = 0.001) => {
@@ -29,6 +30,13 @@ for (const p of plans) {
       for (const r of p.rows) { const m = r[c].match(/\(([\d,]+) × (\d+)\)/); if (m) ok(`${p.slug} · ${r[0]} col ${c}`, n(r[c]), n(m[1]) * +m[2]); }
     }
   }
+}
+// available units (The Pearl & ICON VIII): every figure on the sheet must agree with the others (±1 rupee rounding)
+for (const u of units) {
+  const L = `unit ${u.unit}`, near = (label, a, b) => { rows++; if (Math.abs(a - b) > 1.01) { bad++; console.log(`✗ ${L} ${label}: ${a} vs ${b}`); } };
+  near('size × rate', u.total, u.sqft * u.rate); near('25% booking', u.booking, u.total * 0.25); near('10% possession', u.possession, u.total * 0.10);
+  near('65% instalments', u.instalments, u.total * 0.65); near('60 monthly', u.monthly, u.instalments / 60); near('20 quarterly', u.quarterly, u.instalments / 20);
+  near('splits = total', u.total, u.booking + u.possession + u.instalments);
 }
 console.log(`${rows - bad}/${rows} plan rows add up${bad ? '' : ' ✓'}`);
 process.exit(bad ? 1 : 0);

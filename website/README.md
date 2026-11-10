@@ -72,6 +72,9 @@ Source videos, PDFs and photos live in the repo root (`../`).
 - `python tools/uat/responsive.py [--shots DIR]`: 11 pages × 16 widths (320–1920 px); overflow, clipped text, text < 12 px, tap targets, stretched images
 - `python tools/uat/lighthouse/run.py [mobile|desktop|both] [/path …]`: Lighthouse (PageSpeed engine) scores; `WARM=1` measures in one warmed-up Edge (a cold Edge on Windows adds font start-up time to every run)
 
+### Available units (The Pearl & ICON VIII)
+Edit `src/data/inventory.mjs`: one row per unit (sheet number, tower, type, unit, floor, size, rate, total, booking, possession, instalments, monthly, quarterly). Delete a row when a unit is sold; the home tiles, the Mumtaz City list and the payment-plans tiles update on the next build. Put the developer's sheet for a new unit in `src/static/assets/units/unit-NN.webp`. `node tools/uat/check_plans.mjs` verifies every figure.
+
 ### Swapping photos or adding a society photo
 1. Find a frame: `python tools/grab_site_frames.py ./frames kingdom-valley`, then open `frames/_kingdom-valley.jpg`.
 2. Add it to `STILLS` in `tools/build_society_media.py` (video id, second, crop), then run `python tools/build_society_media.py stills <name>`.

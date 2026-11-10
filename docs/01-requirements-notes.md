@@ -135,3 +135,13 @@ Photo sources added in this phase: "Islamabad International Airport 2022" (Pr0pu
 | D-17 vs Multi Gardens B-17 | Both pages kept |
 | Faisal Town link / society bios | Pages use the verified facts already researched |
 | Email copies of enquiries (Web3Forms) | Left off: needs a key created with the client's Gmail. Enquiries go to WhatsApp, which always works |
+
+## 10. Available units: The Pearl & ICON VIII (owner's list, 10 Nov 2026)
+
+The owner sent 16 unit sheets ("New List" folder): ICON VIII 713, 715, 717, 719 (1 bedroom, 7th floor, Rs 15,400/sq ft) and The Pearl A-1340, A-1316, A-1341, A-1241, A-941, A-1125 (studios), A-1335, A-1315 (1 bedroom), A-945, A-1014, A-1004, A-843 (2 bedroom). All on the developer's 5-year plan: 25% booking, 10% possession, 65% in 60 monthly or 20 quarterly instalments.
+
+- Data: `website/src/data/inventory.mjs` (one row per unit). Remove a row when a unit sells; add rows for new units. Every figure is checked by `tools/uat/check_plans.mjs`.
+- Home: "Apartments you can book today", 4 tiles (Pearl studio from Rs 80.3 Lac · ICON 1 bed from Rs 87.5 Lac · Pearl 1 bed Rs 1.63 Crore · Pearl 2 bed from Rs 2.23 Crore), each linking to the filtered list.
+- Mumtaz City page: "Available units" section with filters (tower, type) and one card per unit (floor, size, rate, total, payment split, monthly/quarterly, "Book this unit" WhatsApp message with the unit number, and the original sheet in the lightbox). Also in the page's structured data (ItemList of Offers).
+- Payment plans page: the same 4 tiles under "Mumtaz City: The Pearl & ICON VIII".
+- ⚠ Two sheets give a floor that disagrees with the unit number (A-1341 says 10th, A-1125 says 13th); the site shows the unit-number floor (13th, 11th). Client to confirm.

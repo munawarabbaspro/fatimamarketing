@@ -152,6 +152,25 @@ with sync_playwright() as p:
     check('Gallery lightbox navigates with arrow keys', '(2 / 6' in cap, cap)
     pg.keyboard.press('Escape')
 
+    # J8b available units: home tiles, Mumtaz City cards, filters, deep link, WhatsApp message, sheet lightbox
+    pg.goto(BASE + '/', wait_until='load')
+    tl = pg.evaluate("[...document.querySelectorAll('#units .utile')].map(a=>({href:a.getAttribute('href'), t:a.querySelector('.utile__type').textContent, p:a.querySelector('.utile__price').textContent}))")
+    check('Home: 4 available-unit tiles with prices', len(tl) == 4 and all('Rs' in t['p'] for t in tl) and tl[0]['p'].endswith('80.3 Lac'), str(tl[:2]))
+    pg.goto(BASE + '/projects/mumtaz-city/', wait_until='load'); pg.locator('#units').scroll_into_view_if_needed()
+    vis = lambda: pg.evaluate("[...document.querySelectorAll('[data-filter-target=units]>li')].filter(l=>!l.classList.contains('is-out')).length")
+    n_all = vis(); pg.click('[data-filter-group=units] [data-filter="studio"]'); pg.wait_for_timeout(200); n_studio = vis()
+    pg.click('[data-filter-group=units] [data-filter="icon-viii"]'); pg.wait_for_timeout(200); n_icon = vis()
+    check('Mumtaz City: 16 unit cards; Studio filter 6; ICON VIII filter 4', (n_all, n_studio, n_icon) == (16, 6, 4), str((n_all, n_studio, n_icon)))
+    pg.goto(BASE + '/projects/mumtaz-city/?units=the-pearl-1-bed#units', wait_until='load'); pg.wait_for_timeout(400)
+    deep = pg.evaluate("[...document.querySelectorAll('[data-filter-target=units]>li')].filter(l=>!l.classList.contains('is-out')).map(l=>l.querySelector('.ucard__t span').textContent)")
+    check('Tile deep link filters to The Pearl 1 Bedroom units', sorted(deep) == ['Unit A-1315', 'Unit A-1335'], str(deep))
+    wa = urllib.parse.unquote(pg.locator('[data-filter-target=units]>li:not(.is-out) .ucard a.btn--wa').first.get_attribute('href'))
+    check('Book-this-unit WhatsApp message names the unit and price', 'unit A-13' in wa and 'Rs 16,280,890' in wa, wa[wa.find('text=') + 5:][:140])
+    pg.locator('[data-filter-target=units]>li:not(.is-out) .ucard [data-lightbox]').first.click(); pg.wait_for_timeout(700)
+    lb = pg.evaluate("(()=>{const i=document.querySelector('#media-modal img');return i&&{src:i.src.split('/').pop(), w:i.naturalWidth}})()")
+    check('View sheet opens the developer sheet', lb and lb['src'].startswith('unit-') and lb['w'] > 700, str(lb))
+    pg.keyboard.press('Escape')
+
     # J9 brand film plays
     pg.goto(BASE + '/', wait_until='load')
     pg.locator('#brand-film').scroll_into_view_if_needed(); pg.wait_for_timeout(400)

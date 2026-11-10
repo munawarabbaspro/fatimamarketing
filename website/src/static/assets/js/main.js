@@ -118,6 +118,17 @@
     });
   });
 
+  // deep link from the "available units" tiles: /projects/mumtaz-city/?units=the-pearl-studio#units
+  const wantUnits = new URLSearchParams(location.search).get('units');
+  if (wantUnits) {
+    const g = $('[data-filter-group="units"]'), list = $('[data-filter-target="units"]');
+    if (g && list) {
+      const b = $(`[data-filter="${CSS.escape(wantUnits)}"]`, g);
+      if (b) b.click();
+      else { $$('[data-filter]', g).forEach((x) => x.setAttribute('aria-pressed', 'false')); [...list.children].forEach((li) => li.classList.toggle('is-out', !(li.dataset.tags || '').split(' ').includes(wantUnits))); }
+    }
+  }
+
   // ---------- payment plan size tabs ----------
   $$('.plan').forEach((plan) => {
     const tabs = $$('[data-size-tab]', plan), panels = $$('[data-size-panel]', plan);
