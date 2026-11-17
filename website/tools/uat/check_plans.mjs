@@ -2,6 +2,7 @@
 // node tools/uat/check_plans.mjs
 import { plans } from '../../src/data/plans.mjs';
 import { units } from '../../src/data/inventory.mjs';
+import { priceGuides, plotOffers } from '../../src/data/prices.mjs';
 const n = (s) => Number(String(s).split('(')[0].replace(/[^0-9]/g, ''));
 let bad = 0, rows = 0;
 const ok = (label, expect, got, tol = 0.001) => {
@@ -37,6 +38,15 @@ for (const u of units) {
   near('size × rate', u.total, u.sqft * u.rate); near('25% booking', u.booking, u.total * 0.25); near('10% possession', u.possession, u.total * 0.10);
   near('65% instalments', u.instalments, u.total * 0.65); near('60 monthly', u.monthly, u.instalments / 60); near('20 quarterly', u.quarterly, u.instalments / 20);
   near('splits = total', u.total, u.booking + u.possession + u.instalments);
+}
+// plot offers: down payment + balance = total; balance / months = monthly instalment (±1 rupee)
+for (const [slug, o] of Object.entries(plotOffers)) {
+  rows += 2; if (o.down + o.balance !== o.total) { bad++; console.log(`✗ ${slug} offer: down + balance ≠ total`); }
+  if (Math.abs(o.balance / o.months - o.monthly) > 1) { bad++; console.log(`✗ ${slug} offer: ${o.months} × ${o.monthly} ≠ ${o.balance}`); }
+}
+// price guides: min ≤ max, both set or both "on request"
+for (const [slug, g] of Object.entries(priceGuides)) for (const r of g.rows) {
+  rows++; if ((r[2] == null) !== (r[3] == null) || (r[2] != null && r[2] > r[3])) { bad++; console.log(`✗ ${slug} ${r[0]} ${r[1]}: ${r[2]}–${r[3]}`); }
 }
 console.log(`${rows - bad}/${rows} plan rows add up${bad ? '' : ' ✓'}`);
 process.exit(bad ? 1 : 0);

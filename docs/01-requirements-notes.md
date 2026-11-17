@@ -147,3 +147,22 @@ The owner sent 16 unit sheets ("New List" folder): ICON VIII 713, 715, 717, 719 
 - Floors (decided): on 14 of 16 sheets the unit number matches the floor (A-945 = 9th). A-1341 ("10th") and A-1125 ("13th") repeat the floor of the sheet they were copied from, so the unit-number floor is shown (13th, 11th).
 - Developers, from the sales sheets themselves: The Pearl is "a project of SA Global"; ICON VIII is "by Mumtaz Construction Company (Pvt) Ltd" with M Realtors as sales partner, amenities security/water/electricity/gas/elevator/parking, "Registry upon possession". MCC as ICON VIII's developer is also confirmed by its Zameen listing. "Serviced residences" (no source) was removed from the ICON VIII copy.
 - The Mumtaz City FAQ (and FAQPage data) now answers which units are available, the 5-year plan with a worked example, and who develops each tower; these answers are generated from `inventory.mjs`, so they never drift from the unit cards.
+
+## 11. Plot prices, Mumtaz City offer & master plans (client batch, 16 Nov 2026)
+
+Data: `website/src/data/prices.mjs` (one place for every figure; `check_plans.mjs` verifies them).
+
+| Item | Source | Where on the site |
+|---|---|---|
+| **Mumtaz City Extension Block 5 Marla**: Rs 55 Lac (was 60), Rs 30 Lac down + Rs 25 Lac in 6 monthly instalments of Rs 416,667; booking from Rs 27.5 Lac; possession within 6 months | Fatima Marketing's 2 posters (English + Urdu) | Mumtaz City page "5 Marla offer" (both posters in the lightbox, WhatsApp "Book this plot"), home "Latest plot prices", payment-plans page, FAQ + Offer structured data |
+| **Top City-1 blocks**: A, D 10 Marla · C, D 1 Kanal · E, F 10 Marla & Kanal · E 5 Marla · G 5 Marla · H farmhouses · J commercial (5 Marla) · K commercial; B and I residential (official layout plan) | Owner's messages + official master plan | Top City-1 page "Blocks at a glance" |
+| **Top City-1 prices**: 5 Marla Rs 70–90 Lac · G Block 5 Marla Rs 80–90 Lac · 10 Marla Rs 1.10–1.50 Crore · 1 Kanal Rs 1.95–2.50 Crore · J commercial (5 Marla) Rs 1.95–3 Crore · K commercial Rs 2–4 Crore · H farmhouses on request | Owner's messages. "195 to 3 Cr" and "2 Cr to 4 Cr" were sent right after "J commercial, G 5 Marla, K commercial", so they are read as J and K commercial | Top City-1 page "Plot prices", home, payment-plans page, FAQ + ItemList data |
+| **PECHS block-wise prices**: 33 rows, A to N (incl. C-, K- and M-Extension), developed/non-developed | Client's price table (2 screenshots) | PECHS page "Plot prices" with size filters, home, payment-plans page, FAQ + ItemList data |
+| PECHS F Block (non-developed) 5 Marla changed **8–10 Lac → 15–16 Lac** | Owner: "8 lakh waly ko 15 say 16 lkh krdy" (a second forward says 14–15; 15–16 used as instructed) | PECHS price list |
+| **Top City-1 master plan** (partial revised layout, Dynast Associates, RDA-approved) | topcity-1.com official PDF (client link) | Top City-1 page "Master plan" (enlarge, full size, official PDF) |
+| **Mumtaz City layout plan** (3,484 kanal) + link to Zameen Plot Finder | mumtazcity.com official PDF; Zameen link from the client (not copied: Zameen watermark) | Mumtaz City page "Master plan" |
+| **PECHS K & M Block plan** | manahilestate.com link from the client (town plan by Plnr. M. Kashif Chaudhary) | PECHS page "Master plan" |
+| Full PECHS society map (manahilestate.com) | Client link | **Not used**: it carries another agency's logo, phone numbers and office address (would send buyers to a competitor) |
+| royalmissionhomeservices.com | Client link | **Not used**: a Dubai home-renovation company with no connection to Fatima Marketing or Islamabad real estate |
+
+Originals kept in `website/tools/src-assets/maps/`.

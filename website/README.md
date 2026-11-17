@@ -72,6 +72,9 @@ Source videos, PDFs and photos live in the repo root (`../`).
 - `python tools/uat/responsive.py [--shots DIR]`: 11 pages × 16 widths (320–1920 px); overflow, clipped text, text < 12 px, tap targets, stretched images
 - `python tools/uat/lighthouse/run.py [mobile|desktop|both] [/path …]`: Lighthouse (PageSpeed engine) scores; `WARM=1` measures in one warmed-up Edge (a cold Edge on Windows adds font start-up time to every run)
 
+### Plot prices, plot offers & master plans
+Edit `src/data/prices.mjs`: `priceGuides` (per society: block, plot, min, max in lakh, note), `plotOffers` (e.g. the Mumtaz City 5 Marla offer; posters in `src/static/assets/offers/`) and `societyMaps` (images in `src/static/assets/maps/`, originals in `tools/src-assets/maps/`). The society pages, the home "Latest plot prices" cards, the payment-plans page, FAQs and structured data all update on the next build. `node tools/uat/check_plans.mjs` checks every figure.
+
 ### Available units (The Pearl & ICON VIII)
 Edit `src/data/inventory.mjs`: one row per unit (sheet number, tower, type, unit, floor, size, rate, total, booking, possession, instalments, monthly, quarterly). Delete a row when a unit is sold; the home tiles, the Mumtaz City list and the payment-plans tiles update on the next build. Put the developer's sheet for a new unit in `src/static/assets/units/unit-NN.webp`. `node tools/uat/check_plans.mjs` verifies every figure.
 

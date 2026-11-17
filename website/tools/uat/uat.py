@@ -171,6 +171,23 @@ with sync_playwright() as p:
     check('View sheet opens the developer sheet', lb and lb['src'].startswith('unit-') and lb['w'] > 700, str(lb))
     pg.keyboard.press('Escape')
 
+    # J8c plot prices, offer and master plans
+    pg.goto(BASE + '/', wait_until='load')
+    hp = pg.evaluate("[...document.querySelectorAll('#prices .utile')].map(a=>a.getAttribute('href'))")
+    check('Home: 3 latest-price cards (Mumtaz offer, Top City-1, PECHS)', len(hp) == 3 and hp[0].endswith('#offer'), str(hp))
+    pg.goto(BASE + '/projects/top-city-1/', wait_until='load')
+    tc = pg.evaluate("({map:!!document.querySelector('#map .mapfig img'), blocks:document.querySelectorAll('.bguide li').length, rows:[...document.querySelectorAll('#prices .prices__list li')].map(l=>l.querySelector('.prices__r').textContent)})")
+    check('Top City-1: master plan, 11 blocks, 7 price rows (1 Kanal Rs 1.95–2.50 Crore, J commercial Rs 1.95–3 Crore)', tc['map'] and tc['blocks'] == 11 and len(tc['rows']) == 7 and 'Rs 1.95–2.50 Crore' in tc['rows'] and 'Rs 1.95–3 Crore' in tc['rows'], str(tc))
+    pg.goto(BASE + '/projects/pechs-islamabad/', wait_until='load'); pg.locator('#prices').scroll_into_view_if_needed()
+    pr = pg.evaluate("[...document.querySelectorAll('#prices .prices__list li')].map(l=>l.textContent)")
+    f5 = [r for r in pr if r.startswith('F5 Marla')]
+    pg.click('[data-filter-group="prices-pechs-islamabad"] [data-filter="5m"]'); pg.wait_for_timeout(200)
+    n5 = pg.evaluate("[...document.querySelectorAll('#prices .prices__list li')].filter(l=>!l.classList.contains('is-out')).length")
+    check('PECHS: 33 block prices, F 5 Marla Rs 15–16 Lac, 5 Marla filter 5', len(pr) == 33 and f5 and 'Rs 15–16 Lac' in f5[0] and n5 == 5, str((len(pr), f5, n5)))
+    pg.goto(BASE + '/projects/mumtaz-city/', wait_until='load')
+    of = pg.evaluate("({price:(document.querySelector('#offer .offer__price strong')||{}).textContent, posters:document.querySelectorAll('#offer .offer__poster').length, map:!!document.querySelector('#map .mapfig img')})")
+    check('Mumtaz City: 5 Marla offer Rs 55 Lac with 2 posters + layout plan', of['price'] == 'Rs 55 Lac' and of['posters'] == 2 and of['map'], str(of))
+
     # J9 brand film plays
     pg.goto(BASE + '/', wait_until='load')
     pg.locator('#brand-film').scroll_into_view_if_needed(); pg.wait_for_timeout(400)

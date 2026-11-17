@@ -82,3 +82,15 @@
   .filters--units::-webkit-scrollbar{display:none}
   .filters--units button{flex:none}
 }
+
+@media (max-width:640px){
+  /* price list: block + plot on the left, price on the right */
+  .prices__head{display:none}
+  .prices__list li{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"b r" "p r";gap:.1rem .8rem;padding:.7rem .9rem}
+  .prices__b{grid-area:b}.prices__p{grid-area:p;font-size:.9rem}.prices__r{grid-area:r;font-size:1rem}
+  .bguide{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .offer__price strong{font-size:2rem}
+  .offer__btns .btn{flex:1 1 100%;justify-content:center}
+  .mapfig--tall .mapfig__img img{height:auto;width:100%}
+  .utiles--3{display:flex}
+}

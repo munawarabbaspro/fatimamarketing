@@ -81,3 +81,11 @@
 @media (max-width:1180px){
   .utiles{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+@media (max-width:1180px){
+  .pgrid__main .utiles--3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .utiles--3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .offer__grid{grid-template-columns:minmax(0,1fr)}
+}

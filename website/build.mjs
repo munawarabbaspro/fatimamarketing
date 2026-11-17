@@ -9,6 +9,7 @@ import { site, keyPoints, highlights, faqs, testimonials, googleProfile } from '
 import { projects as baseProjects } from './src/data/projects.mjs';
 import { plans, cscTerms } from './src/data/plans.mjs';
 import { units, towers as unitTowers, inventoryAsOf } from './src/data/inventory.mjs';
+import { priceGuides, plotOffers, societyMaps, pricesAsOf } from './src/data/prices.mjs';
 import { covers, gallery, extraVideos, posters, homeVideos, heroSlides, showcase } from './src/data/media.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -626,6 +627,82 @@ const ldUnits = () => ({ '@context': 'https://schema.org', '@type': 'ItemList', 
   itemListElement: units.map((u, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Offer', name: `${unitTowers[u.tower].name} ${u.type}, unit ${u.unit}`, price: u.total, priceCurrency: 'PKR', availability: 'https://schema.org/InStock', url: abs('/projects/mumtaz-city/#units'), seller: { '@id': orgId },
     itemOffered: { '@type': 'Apartment', name: `${unitTowers[u.tower].name}, Mumtaz City: unit ${u.unit}`, floorLevel: String(u.floor), floorSize: { '@type': 'QuantitativeValue', value: u.sqft, unitCode: 'FTK' }, ...(typeKey(u.type) === 'studio' ? {} : { numberOfBedrooms: +u.type[0] }) } } })) });
 
+// ---------- plot prices, plot offers & master plans (src/data/prices.mjs) ----------
+const cr = (v) => (v / 100).toFixed(2).replace(/\.00$/, '');
+const priceRange = (lo, hi) => (lo == null ? 'On request'
+  : lo === hi ? (lo >= 100 ? `Rs ${cr(lo)} Crore` : `Rs ${lo} Lac`)
+  : hi < 100 ? `Rs ${lo}–${hi} Lac` : lo >= 100 ? `Rs ${cr(lo)}–${cr(hi)} Crore` : `Rs ${lo} Lac – ${cr(hi)} Crore`);
+const sizeKey = (plot) => (/kanal/i.test(plot) ? 'kanal' : /^10 Marla/.test(plot) ? '10m' : /^[789] Marla/.test(plot) ? '7m' : /^5 Marla/.test(plot) ? '5m' : 'other');
+const SIZE_LABELS = [['5m', '5 Marla'], ['7m', '7–9 Marla'], ['10m', '10 Marla'], ['kanal', 'Kanal'], ['other', 'Commercial & farmhouse']];
+const sizeSummary = (rows) => SIZE_LABELS.map(([k, l]) => { const r = rows.filter((x) => sizeKey(x[1]) === k && x[2] != null); return r.length ? [l, Math.min(...r.map((x) => x[2])), Math.max(...r.map((x) => x[3]))] : null; }).filter(Boolean);
+const priceList = (slug) => {
+  const rows = priceGuides[slug].rows, n = (k) => rows.filter((r) => sizeKey(r[1]) === k).length;
+  const keys = [['all', 'All'], ...SIZE_LABELS.filter(([k]) => n(k))];
+  return `${rows.length > 8 ? `<div class="filters filters--units" role="group" aria-label="Filter by plot size" data-filter-group="prices-${slug}">${keys.map(([k, l], i) => `<button type="button" data-filter="${k}" aria-pressed="${i === 0}">${l} <span>${k === 'all' ? rows.length : n(k)}</span></button>`).join('')}</div>` : ''}
+  <div class="prices"><p class="prices__head" aria-hidden="true"><span>Block</span><span>Plot</span><span>Price range</span></p>
+  <ul class="prices__list" data-filter-target="prices-${slug}">${rows.map(([b, plot, lo, hi, note]) => `<li data-tags="${sizeKey(plot)}"><span class="prices__b">${esc(b)}</span><span class="prices__p">${esc(plot)}${note ? `<small>${esc(note)}</small>` : ''}</span><span class="prices__r">${priceRange(lo, hi)}</span></li>`).join('')}</ul></div>`;
+};
+const pricesBlock = (p) => {
+  const g = priceGuides[p.slug]; if (!g) return '';
+  return `<section id="prices" class="psec"><h2 class="h2">${esc(p.name)} plot prices</h2>
+  <p class="muted">${esc(g.note)} Updated ${pricesAsOf}; confirm the current rate on WhatsApp before paying.</p>
+  ${g.blocks ? `<h3 class="h3">Blocks at a glance</h3><ul class="bguide">${g.blocks.map(([k, t]) => `<li><b>${esc(k)}</b><span>${t.map(esc).join(' · ')}</span></li>`).join('')}</ul><h3 class="h3 mt">Price guide</h3>` : ''}
+  ${priceList(p.slug)}
+  <p class="prices__cta"><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please share today’s ${p.name} plot rates and available plots.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Get today’s rates</a></p></section>`;
+};
+const mapsBlock = (p) => {
+  const ms = societyMaps[p.slug]; if (!ms) return '';
+  return `<section id="map" class="psec"><h2 class="h2">${esc(p.name)} master plan</h2>
+  <div class="maps">${ms.map((m) => `<figure class="mapfig${m.h > m.w ? ' mapfig--tall' : ''}"><button type="button" class="mapfig__img" data-lightbox="/assets/maps/${m.img}.webp" data-caption="${esc(m.title)}" aria-label="Enlarge: ${esc(m.title)}"><img src="/assets/maps/${m.img}-${m.small}.webp" alt="${esc(m.title)}" width="${m.small}" height="${Math.round((m.h * m.small) / m.w)}" loading="lazy" decoding="async"><span class="mapfig__zoom">${ico('expand')} Enlarge</span></button>
+    <figcaption><strong>${esc(m.title)}</strong><span>${esc(m.credit)}.</span><span class="mapfig__links"><a href="/assets/maps/${m.img}.webp" target="_blank" rel="noopener">Open full size</a>${m.pdf ? `<a href="${m.pdf}" target="_blank" rel="noopener">Official PDF</a>` : ''}${m.live ? `<a href="${m.live[0]}" target="_blank" rel="noopener">${esc(m.live[1])}</a>` : ''}</span></figcaption></figure>`).join('')}</div></section>`;
+};
+const offerBlock = (p) => {
+  const o = plotOffers[p.slug]; if (!o) return '';
+  const msg = `Assalam o Alaikum Fatima Marketing, I am interested in the ${p.name} ${o.title} offer (Rs ${pkr(o.total)}, ${rs(o.down)} down payment + ${o.months} monthly instalments of ${rs(o.monthly)}). Please share available plots.`;
+  return `<section id="offer" class="psec offer"><p class="kicker">Limited offer · ${esc(p.name)}</p><h2 class="h2">${esc(o.title)}</h2>
+  <div class="offer__grid"><div class="offer__card">
+    <p class="offer__price"><small>Total price</small><strong>Rs ${pkr(o.total)}</strong>${o.was ? `<s>Rs ${pkr(o.was)}</s>` : ''}</p>
+    <ul class="offer__plan"><li><span>Down payment</span><b>${rs(o.down)}</b></li><li><span>Balance</span><b>${rs(o.balance)}</b></li><li><span>${o.months} monthly instalments</span><b>${rs(o.monthly)}<small> / month</small></b></li></ul>
+    <p class="offer__book">Booking starts from <b>Rs ${pkr(o.booking)}</b></p>
+    <ul class="ticks">${o.points.map((t) => `<li>${ico('check')} ${esc(t)}</li>`).join('')}</ul>
+    <div class="offer__btns"><a class="btn btn--wa" href="${waLink(msg)}" target="_blank" rel="noopener">${brand('wa', 'i')} Book this plot</a><button class="btn btn--outline" type="button" data-enquire="${esc(p.name)}" data-interest="Residential plot">Request a call</button></div>
+  </div><div class="offer__posters">${o.posters.map(([img, alt]) => `<button type="button" class="offer__poster" data-lightbox="/assets/offers/${img}.webp" data-caption="${esc(alt)}" data-group="offer-${p.slug}" aria-label="Enlarge poster: ${esc(alt)}"><img src="/assets/offers/${img}-600.webp" srcset="/assets/offers/${img}-600.webp 600w, /assets/offers/${img}.webp 1024w" sizes="(max-width: 640px) 45vw, 240px" alt="${esc(alt)}" width="600" height="750" loading="lazy" decoding="async"></button>`).join('')}</div></div></section>`;
+};
+const priceFaqs = (p) => {
+  const g = priceGuides[p.slug], o = plotOffers[p.slug], out = [];
+  if (o) out.push({ q: `What is the ${p.name} ${o.title.split('·')[1].trim().replace(/^5 Marla/, '5 Marla')} offer?`, a: `${o.title}: Rs ${pkr(o.total)}${o.was ? ` (was Rs ${pkr(o.was)})` : ''}, with ${rs(o.down)} down payment and the balance of ${rs(o.balance)} in ${o.months} monthly instalments of ${rs(o.monthly)}. Booking starts from Rs ${pkr(o.booking)}, and possession is offered within 6 months. Limited plots; confirm availability on WhatsApp.` });
+  if (g && g.blocks) out.push({ q: `Which plot sizes are in each ${p.name} block?`, a: g.blocks.map(([k, t]) => `${k}: ${t.join(', ')}`).join('; ') + '.' });
+  if (g) out.push({ q: `What are plot prices in ${p.name}?`, a: `As of ${pricesAsOf}: ` + sizeSummary(g.rows).map(([l, lo, hi]) => `${l} ${priceRange(lo, hi)}`).join('; ') + `. ${g.rows.some((r) => r[2] == null) ? 'Farmhouses are priced on request. ' : ''}The full ${g.blocks ? '' : 'block-wise '}list is in the Plot prices section above; rates change with block, development and location.` });
+  return out;
+};
+const ldPrices = (p) => {
+  const g = priceGuides[p.slug], o = plotOffers[p.slug], out = [];
+  if (g) out.push({ '@context': 'https://schema.org', '@type': 'ItemList', name: `${p.name} plot prices (${pricesAsOf})`, itemListElement: g.rows.filter((r) => r[2] != null).map((r, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Offer', name: `${p.name}, ${/block/i.test(r[0]) ? r[0] : `${r[0]} Block`}: ${r[1]} plot${/^(Developed|Non-developed)$/.test(r[4]) ? ` (${r[4].toLowerCase()})` : ''}`, priceCurrency: 'PKR', priceSpecification: { '@type': 'PriceSpecification', minPrice: r[2] * 1e5, maxPrice: r[3] * 1e5, priceCurrency: 'PKR' }, seller: { '@id': orgId }, url: abs(`/projects/${p.slug}/#prices`) } })) });
+  if (o) out.push({ '@context': 'https://schema.org', '@type': 'Offer', name: `${p.name} ${o.title}`, price: o.total, priceCurrency: 'PKR', availability: 'https://schema.org/LimitedAvailability', seller: { '@id': orgId }, url: abs(`/projects/${p.slug}/#offer`) });
+  return out;
+};
+// home: latest plot prices (3 equal cards: Mumtaz City offer, Top City-1, PECHS)
+const priceTiles = () => {
+  const o = plotOffers['mumtaz-city'], tc = priceGuides['top-city-1'], pe = priceGuides['pechs-islamabad'];
+  const tile = (slug, img, kicker, label, price, rows, href, go, i) => { const p = bySlug[slug]; return `<li data-reveal style="--d:${i * 80}ms"><a class="utile" href="${href}">
+    <span class="utile__img">${pic(img, `${p.name}`, { sizes: '(max-width: 640px) 80vw, (max-width: 1180px) 45vw, 400px' })}<span class="chip chip--glass utile__tower">${esc(kicker)}</span></span>
+    <span class="utile__b"><strong class="utile__type">${esc(p.name)}</strong><span class="utile__meta">${esc(label)}</span>
+      <span class="utile__price">${price}</span>
+      <span class="utile__rows">${rows.map(([a, b]) => `<span>${esc(a)} <b>${b}</b></span>`).join('')}</span>
+      <span class="utile__go">${esc(go)} ${ico('arrow')}</span></span></a></li>`; };
+  const com = tc.rows.filter((r) => /^Commercial/.test(r[1]));
+  const tcRows = [...tc.rows.filter((r) => r[0] === 'All blocks').map((r) => [r[1], priceRange(r[2], r[3])]), ['Commercial (J & K)', priceRange(Math.min(...com.map((r) => r[2])), Math.max(...com.map((r) => r[3])))]];
+  return `<ul class="utiles utiles--3">${[
+    tile('mumtaz-city', 'mumtaz-city-2', '5 Marla offer', o.title.split('·')[0].trim() + ' · possession in 6 months', `<small>Total</small>Rs ${pkr(o.total)} <s>Rs ${pkr(o.was)}</s>`, [['Down payment', rs(o.down)], [`${o.months} monthly instalments`, rs(o.monthly)]], '/projects/mumtaz-city/#offer', 'See the offer', 0),
+    tile('top-city-1', 'top-city-1-1', 'Price guide', 'Blocks A–K · master plan', `<small>From</small>Rs ${tc.rows[0][2]} Lac`, tcRows.slice(0, 4), '/projects/top-city-1/#prices', 'Prices & master plan', 1),
+    tile('pechs-islamabad', 'pechs-islamabad-2', 'Price guide', `${pe.rows.length} block-wise prices · K & M Block map`, `<small>From</small>Rs ${Math.min(...pe.rows.map((r) => r[2]))} Lac`, sizeSummary(pe.rows).map(([l, lo, hi]) => [l, priceRange(lo, hi)]).slice(0, 4), '/projects/pechs-islamabad/#prices', 'All block prices', 2),
+  ].join('')}</ul>`;
+};
+const homePricesSec = () => `<section class="sec" id="prices"><div class="wrap">
+  ${secHead({ kicker: 'Latest plot prices', title: 'Today’s rates, straight from our desk', lead: `Plot prices and offers in Mumtaz City, Top City-1 and PECHS, updated ${pricesAsOf}. Every society page has the full list and its master plan.` })}
+  ${priceTiles()}
+</div></section>`;
+
 // ---------- pages ----------
 rmSync(DIST, { recursive: true, force: true });
 const out = [];
@@ -644,7 +721,7 @@ write('/', page({
   desc: '17+ years in Islamabad real estate: plots, villas & apartments in Capital Smart City, Mumtaz City, Top City-1 & more. Latest payment plans: 0331-1111057.',
   preload: '<link rel="preload" as="image" media="(max-width: 980px)" imagesrcset="/assets/img/hero-mumtaz-m-800.webp 800w, /assets/img/hero-mumtaz-m-1200.webp 1200w" imagesizes="100vw" fetchpriority="high">\n<link rel="preload" as="image" media="(min-width: 981px)" imagesrcset="/assets/img/hero-mumtaz-800.webp 800w, /assets/img/hero-mumtaz.webp 1920w" imagesizes="135vw" fetchpriority="high">\n', cls: 'home',
   ld: [ldFaq(faqs), ldLocalVideo({ title: 'Fatima Marketing: Real Services for Real Estate (brand film)', desc: 'Fatima Marketing in 42 seconds: The Pearl, Mumtaz City, Capital Smart City, a guided site visit, our numbers and contact details.', src: 'fatima-marketing-brand-film.mp4', poster: 'mumtaz-city-1', date: '2026-11-03', dur: 42 })],
-  body: hero() + keyPointsSec() + societiesSec() + towersSec() + unitsSec() + plansTeaser() + videosSec() + showcaseSec() + testimonialsSec() + highlightsSec() + contactSec() + filmSec() + faqSec(faqs) + trustSec() + officeSec(),
+  body: hero() + keyPointsSec() + societiesSec() + towersSec() + unitsSec() + homePricesSec() + plansTeaser() + videosSec() + showcaseSec() + testimonialsSec() + highlightsSec() + contactSec() + filmSec() + faqSec(faqs) + trustSec() + officeSec(),
 }));
 
 // Projects index
@@ -664,9 +741,10 @@ for (const p of projects) {
   const crumbs = [['Home', '/'], ['Projects', '/projects/'], [p.name, path]];
   const planList = (p.plans || []).map((s) => planBySlug[s]);
   if (p.slug === 'mumtaz-city' && !p.faqs.some((f) => f.q.startsWith('Which apartments are available in The Pearl'))) p.faqs = [...unitFaqs(), ...p.faqs];
-  const ld = [ldCrumbs(crumbs), ldPlace(p), ldFaq(p.faqs), ...p.videos.map(ldYt), ...(p.slug === 'mumtaz-city' ? [ldUnits()] : [])];
+  if (!p._priceFaqs) { p.faqs = [...priceFaqs(p), ...p.faqs]; p._priceFaqs = true; }
+  const ld = [ldCrumbs(crumbs), ldPlace(p), ldFaq(p.faqs), ...p.videos.map(ldYt), ...(p.slug === 'mumtaz-city' ? [ldUnits()] : []), ...ldPrices(p)];
   if (p.sub) p.sub.forEach((s) => ld.push(ldLocalVideo({ title: `${s.name}, ${p.name} Islamabad`, desc: s.text, src: s.video, poster: s.poster, date: localMeta[s.name][0], dur: localMeta[s.name][1] })));
-  const subnav = [['overview', 'Overview'], ['photos', 'Photos'], ['location', 'Location'], ...(p.sub ? [['towers', 'Towers']] : []), ...(p.slug === 'mumtaz-city' ? [['units', 'Available units']] : []), ['plots', 'Plots'], ['plans', 'Payment plans'], ...(p.videos.length ? [['videos', 'Videos']] : []), ['faq', 'FAQ'], ['enquire', 'Enquire']];
+  const subnav = [['overview', 'Overview'], ...(plotOffers[p.slug] ? [['offer', '5 Marla offer']] : []), ['photos', 'Photos'], ['location', 'Location'], ...(societyMaps[p.slug] ? [['map', 'Master plan']] : []), ...(p.sub ? [['towers', 'Towers']] : []), ...(p.slug === 'mumtaz-city' ? [['units', 'Available units']] : []), ...(priceGuides[p.slug] ? [['prices', 'Prices']] : []), ['plots', 'Plots'], ['plans', 'Payment plans'], ...(p.videos.length ? [['videos', 'Videos']] : []), ['faq', 'FAQ'], ['enquire', 'Enquire']];
   const body = `<section class="phero phero--project phero--img"><div class="phero__bg">${heroPic(p.cover)}</div><div class="wrap phero__in">
     ${breadcrumbs(crumbs)}
     <div class="phero__row">${societyBadge(p, 'lg')}<div><p class="kicker">${esc(p.area)}</p><h1>${esc(p.name)}${/Islamabad|Taxila/.test(p.name) ? '' : /Taxila/.test(p.area) ? ', Taxila' : ' Islamabad'}</h1><p class="phero__loc">${ico('pin')} ${esc(p.location)}</p></div></div>
@@ -678,10 +756,12 @@ for (const p of projects) {
     <div class="pgrid__main">
       <section id="overview" class="psec"><h2 class="h2">About ${esc(p.name)}</h2>${p.intro.map((t) => `<p>${md(t)}</p>`).join('')}
         <dl class="facts">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></section>
+      ${offerBlock(p)}
       <section id="photos" class="psec"><h2 class="h2">${esc(p.name)} photos</h2><p class="muted">Frames from Fatima Marketing’s own site-visit and drone videos.</p>
         <div class="pgal pgal--${Math.min(p.gallery.length, 4)}">${p.gallery.map(([n, cap], i) => `<button type="button" class="pgal__item${i === 0 ? ' pgal__item--xl' : ''}" data-lightbox="${imgSrc(n).l}" data-caption="${esc(p.name)}: ${esc(cap)}" data-group="${p.slug}">${pic(n, `${p.name}: ${cap}`, { sizes: i === 0 ? '(max-width: 900px) 100vw, 50vw' : '(max-width: 900px) 50vw, 25vw' })}<span class="pgal__cap">${esc(cap)}</span></button>`).join('')}</div></section>
       <section id="location" class="psec"><h2 class="h2">Location & access</h2><p>${esc(p.location)}.</p>
         <ul class="ticks">${p.access.map((a) => `<li>${ico('check')} ${esc(a)}</li>`).join('')}</ul>${mapEmbed(p.mapQuery, p.name)}</section>
+      ${mapsBlock(p)}
       ${p.sub ? `<section id="towers" class="psec"><h2 class="h2">Projects inside ${esc(p.name)}</h2>${p.sub.map((s) => `<article class="tower" id="${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}">
           <div class="tower__media">${localVideoTile({ src: s.video, poster: s.name === 'The Pearl' ? 'pearl-1' : s.name === 'Sofia Sapphire' ? 'sofia-palace-facade' : s.poster, title: `${s.name}: official video` })}</div>
           <div class="tower__b"><p class="kicker">${esc(s.kicker)}</p><h3 class="h3">${esc(s.name)}</h3><p>${esc(s.text)}</p>
@@ -690,6 +770,7 @@ for (const p of projects) {
           <div class="tower__btns"><button class="btn btn--gold" type="button" data-enquire="${esc(s.name)} (${esc(p.name)})" data-interest="Latest payment plan">${esc(s.name)} payment plan</button><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please share ${s.name} (${p.name}) floor plans and payment plan.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Ask on WhatsApp</a></div></div>
         </article>`).join('')}</section>` : ''}
       ${p.slug === 'mumtaz-city' ? unitsBlock() : ''}
+      ${pricesBlock(p)}
       <section id="plots" class="psec"><h2 class="h2">Plot sizes${p.blocks ? ' & blocks' : ''}</h2>
         <div class="sizes">${Object.entries(p.sizes).map(([k, v]) => `<div class="sizes__g"><h3>${esc(k)}</h3><ul>${v.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>
         ${p.blocks ? `<h3 class="h3 mt">Blocks & sub-projects</h3><ul class="pills">${p.blocks.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
@@ -722,6 +803,7 @@ write('/payment-plans/', page({
     ${plans.map((pl) => planBlock(pl, { heading: 'h2' })).join('')}
     <div class="terms"><h2 class="h3">General terms (Future Developments Holdings)</h2><ul>${cscTerms.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>
     <section class="psec" id="mumtaz-units"><h2 class="h2">Mumtaz City: The Pearl & ICON VIII</h2><p class="muted">${units.length} apartments available on the developer’s 5-year plan (25% booking, 10% possession, 65% in 60 monthly or 20 quarterly instalments). Availability as of ${inventoryAsOf}.</p>${unitTiles()}</section>
+    <section class="psec" id="plot-prices"><h2 class="h2">Plot offers & price guides</h2><p class="muted">The Mumtaz City Extension Block 5 Marla offer and our latest Top City-1 and PECHS plot prices, updated ${pricesAsOf}.</p>${priceTiles()}</section>
     <section class="psec"><h2 class="h2">Payment plans for other societies</h2><ul class="soc-grid soc-grid--3">${projects.filter((p) => !p.plans).map((r, i) => scard(r, { i })).join('')}</ul></section>
   </div><aside class="pgrid__side" id="enquire"><div class="sticky">${enquiryForm({ project: 'Capital Smart City', title: 'Confirm a plan & availability', sub: 'Prices change often. We confirm the current rate before you pay.' })}</div></aside></div>`,
 }));
