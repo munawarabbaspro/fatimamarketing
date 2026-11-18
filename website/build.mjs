@@ -254,6 +254,18 @@ const planTable = (p) => `<div class="table-wrap" tabindex="0" role="region" ari
 </table></div>`;
 
 let planUid = 0;
+// total + payment bar + step list; shared by the developer plans, the Mumtaz City offer and the apartment plan
+const calcInner = (x, label = 'Total price') => {
+  const sum = x.parts.reduce((a, y) => a + y.sum, 0) || 1;
+  return `<div class="calc__total"><small>${label}${x.sub ? ` · ${esc(x.sub)}` : ''}</small><strong>${pkrFull(x.total)}</strong><span>${pkr(x.total)}</span></div>
+      <div class="calc__main">${payBar(x)}
+        <ol class="steps">${x.parts.map((y, j) => `<li class="step"><span class="dot ${SEG[j]}"></span><span class="step__l">${esc(y.label)}</span><span class="step__v">${y.count > 1 ? `<b>${y.count} ×</b> ` : ''}${pkrFull(y.each)}</span><span class="step__p">${Math.round((y.sum / sum) * 100)}%</span></li>`).join('')}</ol>
+      </div>`;
+};
+const sizeTabs = (uid, labels) => `<div class="sizes-tabs" role="tablist" aria-label="Choose a size">${labels.map((l, i) => `<button type="button" role="tab" id="${uid}-t${i}" aria-controls="${uid}-p${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-size-tab="${i}">${esc(l)}</button>`).join('')}</div>`;
+const calcPanels = (uid, list, label) => list.map((x, i) => `<div class="calc" role="tabpanel" id="${uid}-p${i}" aria-labelledby="${uid}-t${i}" data-size-panel="${i}" ${i ? 'hidden' : ''}>
+      ${calcInner(x, label)}
+    </div>`).join('');
 const planBlock = (p, { heading = 'h3' } = {}) => {
   const b = breakdown(p); const uid = `pl${++planUid}`;
   return `<article class="plan" id="${p.slug}" data-reveal>
@@ -262,16 +274,8 @@ const planBlock = (p, { heading = 'h3' } = {}) => {
     <button class="plan__img" type="button" data-lightbox="/assets/plans/${p.img}.webp" data-caption="${esc(p.title)}: original developer schedule" aria-label="Original schedule: ${esc(p.title)} (open image)">
       <img src="/assets/plans/${p.img}-480.webp" alt="" width="480" height="320" loading="lazy" decoding="async"><span>${ico('expand')} Original schedule</span></button>
   </div>
-  <div class="sizes-tabs" role="tablist" aria-label="Choose a size">${b.map((x, i) => `<button type="button" role="tab" id="${uid}-t${i}" aria-controls="${uid}-p${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-size-tab="${i}">${esc(x.size)}</button>`).join('')}</div>
-  ${b.map((x, i) => {
-    const sum = x.parts.reduce((a, y) => a + y.sum, 0) || 1;
-    return `<div class="calc" role="tabpanel" id="${uid}-p${i}" aria-labelledby="${uid}-t${i}" data-size-panel="${i}" ${i ? 'hidden' : ''}>
-      <div class="calc__total"><small>Total price${x.sub ? ` · ${esc(x.sub)}` : ''}</small><strong>${pkrFull(x.total)}</strong><span>${pkr(x.total)}</span></div>
-      <div class="calc__main">${payBar(x)}
-        <ol class="steps">${x.parts.map((y, j) => `<li class="step"><span class="dot ${SEG[j]}"></span><span class="step__l">${esc(y.label)}</span><span class="step__v">${y.count > 1 ? `<b>${y.count} ×</b> ` : ''}${pkrFull(y.each)}</span><span class="step__p">${Math.round((y.sum / sum) * 100)}%</span></li>`).join('')}</ol>
-      </div>
-    </div>`;
-  }).join('')}
+  ${sizeTabs(uid, b.map((x) => x.size))}
+  ${calcPanels(uid, b)}
   ${p.calc.note ? `<p class="plan__note">${esc(p.calc.note)}</p>` : ''}
   <details class="plan__more"><summary>${ico('table')} Full schedule &amp; terms ${ico('chev', 'i chev')}</summary>${planTable(p)}<ul class="plan__notes">${p.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul></details>
   <div class="plan__cta"><button class="btn btn--gold" type="button" data-enquire="Capital Smart City" data-interest="Latest payment plan" data-msg="Please confirm current price & availability: ${esc(p.title)}">Check availability</button>
@@ -462,7 +466,8 @@ const FEATURED_PLANS = ['phase-3-pre-launch-residential', 'overseas-prime-ii-res
 const plansTeaser = () => `<section class="sec sec--ink plans-sec" id="payment-plans"><div class="wrap">
   ${secHead({ kicker: 'Capital Smart City · live developer schedules', title: 'Payment plans, made simple', lead: 'Pick a plan to see the full split: down payment, confirmation and every installment. Updated from the developer’s official schedules.', light: true })}
   <div class="pcards">${FEATURED_PLANS.map((s) => planCard(planBySlug[s])).join('')}</div>
-  <p class="center"><a class="btn btn--gold btn--lg" href="/payment-plans/">See all ${plans.length} payment plans ${ico('arrow')}</a></p>
+  <div class="plans-socs" data-reveal><span>Payment plans for</span>${PLAN_FIRST.slice(1).map((s) => `<a class="chip chip--glass" href="/payment-plans/#soc-${s}">${nb(bySlug[s].name)}</a>`).join('')}<a class="chip chip--glass" href="/payment-plans/">All societies</a></div>
+  <p class="center"><a class="btn btn--gold btn--lg" href="/payment-plans/">Payment plans by society ${ico('arrow')}</a></p>
 </div></section>`;
 
 const videosSec = () => {
@@ -642,12 +647,16 @@ const priceList = (slug) => {
   <div class="prices"><p class="prices__head" aria-hidden="true"><span>Block</span><span>Plot</span><span>Price range</span></p>
   <ul class="prices__list" data-filter-target="prices-${slug}">${rows.map(([b, plot, lo, hi, note]) => `<li data-tags="${sizeKey(plot)}"><span class="prices__b">${esc(b)}</span><span class="prices__p">${esc(plot)}${note ? `<small>${esc(note)}</small>` : ''}</span><span class="prices__r">${priceRange(lo, hi)}</span></li>`).join('')}</ul></div>`;
 };
+const priceGuideBody = (p) => {
+  const g = priceGuides[p.slug]; if (!g) return '';
+  return `${g.blocks ? `<h3 class="h3">Blocks at a glance</h3><ul class="bguide">${g.blocks.map(([k, t]) => `<li><b>${esc(k)}</b><span>${t.map(esc).join(' · ')}</span></li>`).join('')}</ul><h3 class="h3 mt">Price guide</h3>` : ''}
+  ${priceList(p.slug)}`;
+};
 const pricesBlock = (p) => {
   const g = priceGuides[p.slug]; if (!g) return '';
   return `<section id="prices" class="psec"><h2 class="h2">${esc(p.name)} plot prices</h2>
   <p class="muted">${esc(g.note)} Updated ${pricesAsOf}; confirm the current rate on WhatsApp before paying.</p>
-  ${g.blocks ? `<h3 class="h3">Blocks at a glance</h3><ul class="bguide">${g.blocks.map(([k, t]) => `<li><b>${esc(k)}</b><span>${t.map(esc).join(' · ')}</span></li>`).join('')}</ul><h3 class="h3 mt">Price guide</h3>` : ''}
-  ${priceList(p.slug)}
+  ${priceGuideBody(p)}
   <p class="prices__cta"><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please share today’s ${p.name} plot rates and available plots.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Get today’s rates</a></p></section>`;
 };
 const mapsBlock = (p) => {
@@ -702,6 +711,106 @@ const homePricesSec = () => `<section class="sec" id="prices"><div class="wrap">
   ${secHead({ kicker: 'Latest plot prices', title: 'Today’s rates, straight from our desk', lead: `Plot prices and offers in Mumtaz City, Top City-1 and PECHS, updated ${pricesAsOf}. Every society page has the full list and its master plan.` })}
   ${priceTiles()}
 </div></section>`;
+
+// ---------- payment plans by society (/payment-plans/): pick a society, see only its plan ----------
+// Without JavaScript every panel is shown and the picker works as jump links.
+const PLAN_FIRST = ['capital-smart-city', 'mumtaz-city', 'top-city-1', 'pechs-islamabad'];
+const socList = () => [...PLAN_FIRST.map((s) => bySlug[s]), ...projects.filter((p) => !PLAN_FIRST.includes(p.slug))];
+const socLine = (p) => (p.plans ? `${p.plans.length} developer plans`
+  : p.slug === 'mumtaz-city' ? `5 Marla offer · ${units.length} apartments`
+  : priceGuides[p.slug]?.blocks ? 'Prices by block · master plan'
+  : priceGuides[p.slug] ? `${priceGuides[p.slug].rows.length} block prices · maps` : 'Plan on request');
+const thumb = (p) => `<img src="/assets/society/thumb-${p.slug}.webp" alt="" width="240" height="240" loading="lazy" decoding="async">`;
+const PLAN_VIDEO = /payment|plan|instal|booking|offer/i;
+const planVideos = (p) => p.videos.filter((v) => PLAN_VIDEO.test(v.title));
+
+const socPicker = () => {
+  const L = socList(), item = (p, big) => `<li><a class="spick${big ? '' : ' spick--sm'}" href="#soc-${p.slug}" data-soc="${p.slug}"><span class="spick__img">${thumb(p)}</span><span class="spick__t"><strong>${nb(p.name)}</strong>${big ? `<small>${esc(socLine(p))}</small>` : ''}</span>${big ? ico('arrow', 'i spick__go') : ''}</a></li>`;
+  return `<nav class="spicker" aria-label="Choose a society" data-socpick>
+  <p class="spicker__t">${ico('wallet')} Choose a society to see its payment plan</p>
+  <ul class="spicker__main">${L.slice(0, PLAN_FIRST.length).map((p) => item(p, true)).join('')}</ul>
+  <p class="spicker__sub">More societies <span>· we send the latest plan on request</span></p>
+  <ul class="spicker__more">${L.slice(PLAN_FIRST.length).map((p) => item(p, false)).join('')}</ul></nav>`;
+};
+
+// Mumtaz City Extension Block offer, in the same layout as the developer plans
+const offerPlan = (p) => {
+  const o = plotOffers[p.slug]; if (!o) return '';
+  const x = { total: o.total, sub: o.title.split('·')[1].trim(), parts: [{ label: 'Down payment', each: o.down, count: 1, sum: o.down }, { label: 'Monthly instalment', each: o.monthly, count: o.months, sum: o.balance }] };
+  const msg = `Assalam o Alaikum Fatima Marketing, I am interested in the ${p.name} ${o.title} offer (Rs ${pkr(o.total)}, ${rs(o.down)} down payment + ${o.months} monthly instalments of ${rs(o.monthly)}). Please share available plots.`;
+  const poster = ([img, alt], i) => `<button class="plan__img plan__img--poster" type="button" data-lightbox="/assets/offers/${img}.webp" data-caption="${esc(alt)}" data-group="plan-offer-${p.slug}" aria-label="Offer poster: ${esc(alt)} (open image)"${i ? ' hidden' : ''}>${i ? '' : `<img src="/assets/offers/${img}-600.webp" alt="" width="600" height="750" loading="lazy" decoding="async">`}<span>${ico('expand')} Offer posters (${o.posters.length})</span></button>`;
+  return `<article class="plan" id="${p.slug}-plot-offer">
+  <div class="plan__head">
+    <div><p class="kicker">Residential plot · ${o.months}-month plan</p><h3 class="plan__t">${esc(o.title.replace(' · ', ': '))}</h3><p class="plan__offer">Was Rs ${pkr(o.was)}, now Rs ${pkr(o.total)} · booking from Rs ${pkr(o.booking)}</p></div>
+    ${o.posters.map(poster).join('')}
+  </div>
+  <div class="calc">${calcInner(x)}</div>
+  <ul class="ticks plan__ticks">${o.points.map((t) => `<li>${ico('check')} ${esc(t)}</li>`).join('')}</ul>
+  <div class="plan__cta"><a class="btn btn--wa" href="${waLink(msg)}" target="_blank" rel="noopener">${brand('wa', 'i')} Book this plot</a><a class="btn btn--outline" href="/projects/${p.slug}/#offer">Offer details ${ico('arrow')}</a></div>
+</article>`;
+};
+
+// The Pearl & ICON VIII: one tab per unit type (lowest-priced unit), every unit in the full schedule
+const unitsPlan = () => {
+  const G = unitGroups(), uid = `pl${++planUid}`, first = units[0];
+  const list = G.map((g) => { const u = g.list[0]; return { total: u.total, sub: `unit ${u.unit}, ${sq(u.sqft)} sq ft`, parts: [{ label: 'Booking (25%)', each: u.booking, count: 1, sum: u.booking }, { label: 'On possession (10%)', each: u.possession, count: 1, sum: u.possession }, { label: 'Monthly instalment', each: u.monthly, count: 60, sum: u.instalments }] }; });
+  const sheet = (u, i) => { const f = `assets/units/unit-${String(u.sheet).padStart(2, '0')}.webp`, [w, h] = webpSize(f);
+    return `<button class="plan__img" type="button" data-lightbox="/${f}" data-caption="${esc(`${unitTowers[u.tower].name} ${u.type}, unit ${u.unit}: developer’s sheet`)}" data-group="plan-unit-sheets" aria-label="Developer’s unit sheets (open image)"${i ? ' hidden' : ''}>${i ? '' : `<img src="/${f}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">`}<span>${ico('expand')} Unit sheets (${units.length})</span></button>`; };
+  const head = ['Unit', 'Tower · type', 'Floor', 'Size (sq ft)', 'Total', 'Booking 25%', 'Possession 10%', '60 monthly', '20 quarterly'];
+  return `<article class="plan" id="mumtaz-units">
+  <div class="plan__head">
+    <div><p class="kicker">Apartments · 5 years</p><h3 class="plan__t">The Pearl & ICON VIII: developer’s 5-year plan</h3><p class="plan__offer">25% booking · 10% on possession · 65% in 60 monthly or 20 quarterly instalments</p></div>
+    ${units.map(sheet).join('')}
+  </div>
+  ${sizeTabs(uid, G.map((g) => `${unitTowers[g.tower].name} ${g.type.replace('Bedroom', 'Bed')}`))}
+  ${calcPanels(uid, list, 'From')}
+  <p class="plan__note">Each tab shows the lowest-priced unit of that type. ${units.length} units available as of ${inventoryAsOf}; the full list is below.</p>
+  <details class="plan__more"><summary>${ico('table')} All ${units.length} units &amp; their instalments ${ico('chev', 'i chev')}</summary><div class="table-wrap" tabindex="0" role="region" aria-label="The Pearl and ICON VIII: every available unit"><table class="plan-table">
+    <caption>The Pearl & ICON VIII, Mumtaz City: amounts in PKR</caption>
+    <thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>
+    <tbody>${units.map((u) => `<tr><th scope="row">${esc(u.unit)}</th><td>${esc(unitTowers[u.tower].name)} · ${esc(u.type)}${u.tag ? ` (${esc(u.tag.toLowerCase())})` : ''}</td><td>${ord(u.floor)}</td><td>${sq(u.sqft)}</td><td>${u.total.toLocaleString('en-US')}</td><td>${u.booking.toLocaleString('en-US')}</td><td>${u.possession.toLocaleString('en-US')}</td><td>${u.monthly.toLocaleString('en-US')}</td><td>${u.quarterly.toLocaleString('en-US')}</td></tr>`).join('')}</tbody>
+  </table></div><ul class="plan__notes"><li>Rates: Rs ${span(Math.min(...units.map((u) => u.rate)), Math.max(...units.map((u) => u.rate)), (n) => n.toLocaleString('en-US'))} per sq ft, from the developers’ unit sheets.</li><li>Example: ${esc(unitTowers[first.tower].name)} unit ${esc(first.unit)} is ${rs(first.booking)} on booking, ${rs(first.possession)} on possession and ${rs(first.monthly)} a month for 60 months.</li><li>Units sell fast: confirm availability on WhatsApp before paying.</li></ul></details>
+  <div class="plan__cta"><a class="btn btn--gold" href="/projects/mumtaz-city/#units">Choose a unit ${ico('arrow')}</a><a class="btn btn--wa" href="${waLink('Assalam o Alaikum Fatima Marketing, please share the latest available units in The Pearl and ICON VIII (Mumtaz City).')}" target="_blank" rel="noopener">${brand('wa', 'i')} Latest availability</a></div>
+</article>`;
+};
+
+// compact master-plan row (thumbnail + links) for a panel
+const mapThumbs = (p) => {
+  const ms = societyMaps[p.slug]; if (!ms) return '';
+  return `<h3 class="h3 mt">${esc(p.name)} ${ms.length > 1 ? 'maps' : 'master plan'}</h3><div class="pmaps">${ms.map((m) => `<figure class="pmap"><button type="button" class="pmap__img" data-lightbox="/assets/maps/${m.img}.webp" data-caption="${esc(m.title)}" aria-label="Enlarge: ${esc(m.title)}"><img src="/assets/maps/${m.img}-${m.small}.webp" alt="" width="${m.small}" height="${Math.round((m.h * m.small) / m.w)}" loading="lazy" decoding="async"><span>${ico('expand')} Enlarge</span></button>
+    <figcaption><strong>${esc(m.title)}</strong><span class="mapfig__links"><a href="/assets/maps/${m.img}.webp" target="_blank" rel="noopener">Full size</a>${m.pdf ? `<a href="${m.pdf}" target="_blank" rel="noopener">Official PDF</a>` : ''}${m.live ? `<a href="${m.live[0]}" target="_blank" rel="noopener">${esc(m.live[2] || m.live[1])}</a>` : ''}</span></figcaption></figure>`).join('')}</div>`;
+};
+const videoRow = (p, title) => { const v = planVideos(p); return v.length ? `<h3 class="h3 mt">${title}</h3><div class="vgrid">${v.map((x) => vcard({ ...x, project: p }, { society: null })).join('')}</div>` : ''; };
+
+const socPanel = (p) => {
+  let title = `${esc(p.name)} payment plan`, lead, body;
+  if (p.plans) {
+    const list = p.plans.map((s) => planBySlug[s]);
+    title = `${esc(p.name)} payment plans`;
+    lead = `${list.length} schedules from Future Developments Holdings, transcribed from the developer’s originals. Pick a plan and a size to see the exact split.`;
+    body = `<ul class="plan-jump plan-jump--wide">${list.map((pl) => `<li><a href="#${pl.slug}">${esc(pl.title.split(':')[0])}<small>${esc(pl.category)} · from Rs ${pkr(planFrom(pl))}</small></a></li>`).join('')}</ul>
+    ${list.map((pl) => planBlock(pl)).join('')}
+    <div class="terms"><h3>General terms (Future Developments Holdings)</h3><ul>${cscTerms.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>`;
+  } else if (p.slug === 'mumtaz-city') {
+    title = `${esc(p.name)} payment plans`;
+    lead = `The Extension Block 5 Marla plot offer and the developer’s 5-year plan for The Pearl and ICON VIII apartments. Prices updated ${pricesAsOf}.`;
+    body = offerPlan(p) + unitsPlan() + mapThumbs(p);
+  } else if (priceGuides[p.slug]) {
+    title = `${esc(p.name)} plot prices & payment`;
+    lead = `${esc(priceGuides[p.slug].note)} Updated ${pricesAsOf}. For the payment terms of a particular plot, ask us on WhatsApp.`;
+    body = priceGuideBody(p) + mapThumbs(p) + videoRow(p, 'Booking & payment video');
+  } else {
+    lead = `Developers revise ${esc(p.name)} prices and instalment plans often, so we send the current plan on request, usually within minutes on WhatsApp.`;
+    body = `<dl class="facts facts--panel">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    <h3 class="h3 mt">What you can book</h3><ul class="sizes-list">${Object.entries(p.sizes).map(([t, s]) => `<li><b>${esc(t)}</b>${s.map((z) => `<span>${esc(z)}</span>`).join('')}</li>`).join('')}</ul>
+    ${videoRow(p, 'Payment plan video')}`;
+  }
+  return `<section class="socpanel" id="soc-${p.slug}" data-soc-panel="${p.slug}" data-name="${esc(p.name)}" aria-labelledby="soc-${p.slug}-h" tabindex="-1">
+  <header class="socpanel__h"><span class="socpanel__img">${thumb(p)}</span><div><p class="kicker">${esc(p.area)}</p><h2 class="h2" id="soc-${p.slug}-h">${title}</h2><p class="socpanel__lead">${lead}</p></div></header>
+  ${body}
+  <div class="socpanel__foot"><button class="btn btn--gold" type="button" data-enquire="${esc(p.name)}" data-interest="Latest payment plan">Request the latest ${esc(p.name)} plan</button><a class="btn btn--wa" href="${waLink(`Assalam o Alaikum Fatima Marketing, please send the latest ${p.name} payment plan.`)}" target="_blank" rel="noopener">${brand('wa', 'i')} Ask on WhatsApp</a><a class="btn btn--outline" href="/projects/${p.slug}/">About ${esc(p.name)} ${ico('arrow')}</a></div>
+</section>`;
+};
 
 // ---------- pages ----------
 rmSync(DIST, { recursive: true, force: true });
@@ -793,18 +902,14 @@ for (const p of projects) {
 
 // Payment plans hub
 write('/payment-plans/', page({
-  path: '/payment-plans/', title: 'Capital Smart City Payment Plans 2026 (All Blocks)',
-  desc: 'All 13 Capital Smart City payment plans on file: Overseas East, Prime, West, Executive, Phase 3, villas, Jade Tower & commercial plots.',
+  path: '/payment-plans/', title: 'Payment Plans 2026: Capital Smart City, Mumtaz City & More',
+  desc: `Payment plans by society: ${plans.length} Capital Smart City schedules, the Mumtaz City Rs ${pkr(plotOffers['mumtaz-city'].total)} 5 Marla offer and apartments, Top City-1 and PECHS plot prices.`,
   ld: [ldCrumbs([['Home', '/'], ['Payment plans', '/payment-plans/']])],
-  body: `<section class="phero phero--img"><div class="phero__bg">${pic('hero-plans', '', { eager: true, sizes: '100vw', pos: '50% 55%' })}</div><div class="wrap phero__in">${breadcrumbs([['Home', '/'], ['Payment plans', '/payment-plans/']])}<h1>Payment plans</h1><p>${plans.length} Capital Smart City schedules on file. Pick a plan and a size to see the exact split. For every other society we deal in, ask for the latest plan on WhatsApp; developers update them often.</p>
-    <div class="phero__btns"><a class="btn btn--wa btn--lg" href="${waLink('Assalam o Alaikum Fatima Marketing, please share the latest payment plans.')}" target="_blank" rel="noopener">${brand('wa', 'i')} Plans for other societies</a></div></div></section>
-  <div class="wrap pgrid"><div class="pgrid__main">
-    <ul class="plan-jump plan-jump--wide">${plans.map((pl) => `<li><a href="#${pl.slug}">${esc(pl.title.split(':')[0])}<small>${esc(pl.category)} · from Rs ${pkr(planFrom(pl))}</small></a></li>`).join('')}</ul>
-    ${plans.map((pl) => planBlock(pl, { heading: 'h2' })).join('')}
-    <div class="terms"><h2 class="h3">General terms (Future Developments Holdings)</h2><ul>${cscTerms.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>
-    <section class="psec" id="mumtaz-units"><h2 class="h2">Mumtaz City: The Pearl & ICON VIII</h2><p class="muted">${units.length} apartments available on the developer’s 5-year plan (25% booking, 10% possession, 65% in 60 monthly or 20 quarterly instalments). Availability as of ${inventoryAsOf}.</p>${unitTiles()}</section>
-    <section class="psec" id="plot-prices"><h2 class="h2">Plot offers & price guides</h2><p class="muted">The Mumtaz City Extension Block 5 Marla offer and our latest Top City-1 and PECHS plot prices, updated ${pricesAsOf}.</p>${priceTiles()}</section>
-    <section class="psec"><h2 class="h2">Payment plans for other societies</h2><ul class="soc-grid soc-grid--3">${projects.filter((p) => !p.plans).map((r, i) => scard(r, { i })).join('')}</ul></section>
+  body: `<section class="phero phero--img"><div class="phero__bg">${pic('hero-plans', '', { eager: true, sizes: '100vw', pos: '50% 55%' })}</div><div class="wrap phero__in">${breadcrumbs([['Home', '/'], ['Payment plans', '/payment-plans/']])}<h1>Payment plans</h1><p>Choose a society to see its own plan: ${plans.length} Capital Smart City schedules, the Mumtaz City offer and apartments, and Top City-1 and PECHS plot prices. For other societies we send the latest plan on WhatsApp.</p>
+    <div class="phero__btns"><a class="btn btn--wa btn--lg" href="${waLink('Assalam o Alaikum Fatima Marketing, please share the latest payment plans.')}" target="_blank" rel="noopener">${brand('wa', 'i')} Ask for any society’s plan</a></div></div></section>
+  <div class="wrap spicker-wrap">${socPicker()}</div>
+  <div class="wrap pgrid pgrid--plans"><div class="pgrid__main">
+    ${socList().map(socPanel).join('')}
   </div><aside class="pgrid__side" id="enquire"><div class="sticky">${enquiryForm({ project: 'Capital Smart City', title: 'Confirm a plan & availability', sub: 'Prices change often. We confirm the current rate before you pay.' })}</div></aside></div>`,
 }));
 

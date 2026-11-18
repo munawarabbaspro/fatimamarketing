@@ -171,3 +171,15 @@ Mobile performance before Phase 3 was 69–95 (home 69: the hero video was being
 New media fixes: native 1920 px 3:1 page-header banners on large screens (`tools/make_banners.py`); the enquiry section's background photo is hidden on phones/tablets and the trust photo becomes a sharp band; two hazy gallery frames removed.
 
 Decided without the client (see `01-requirements-notes.md` §9): address = Allied Plaza (user-confirmed); hours hidden until known; Harmony Park kept and labelled expired; leadership and key-point wording kept.
+
+## 9. Payment plans by society (18 Nov 2026)
+
+| Audit | Result |
+|---|---|
+| Customer journeys (`uat.py`) | 71/71 pass, including 8 new J10 checks: picker lists all 14 societies with Capital Smart City first (13 plans); Mumtaz City panel (offer Rs 5,500,000 = Rs 3,000,000 + 6 × Rs 416,667, 16-unit table, 4 unit-type tabs, side form switches to Mumtaz City); The Pearl 2 Bed tab = Rs 22,339,530; panel images load; PECHS panel 33 prices + full-society Plot Finder link; Blue World City panel (facts, request button, plan video); deep links `#soc-top-city-1` and `#overseas-east-residential` |
+| SEO tags, structured data, links, JS syntax (`audit.py`) | 0 issues (new title "Payment Plans 2026: Capital Smart City, Mumtaz City & More", 58 chars; description 148 chars) |
+| Plan, unit, offer and price maths (`check_plans.mjs`) | 226/226 |
+| Layout, 11 pages × 16 widths (`responsive.py`) | All zero. The first run flagged the picker's 11.5 px label and 11.8 px tile captions on phones; raised to 12.2 / 12.5 px |
+
+One home-page check ("Watch video opens modal and plays full film") failed once because the 1080p film had not started buffering within 2.5 s on the local server; it passed on the runs before and after. Timing only, no defect.
+

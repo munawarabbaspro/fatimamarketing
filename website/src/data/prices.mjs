@@ -69,5 +69,7 @@ export const plotOffers = {
 export const societyMaps = {
   'top-city-1': [{ img: 'top-city-1-master-plan', small: 800, w: 2600, h: 4728, title: 'Top City-1 layout plan (partial revised plan)', credit: 'Official layout plan, TopCity-1 (topcity-1.com); approved by the Rawalpindi Development Authority', pdf: 'https://topcity-1.com/wp-content/uploads/2026/08/Master-Plan-TopCity-1_compressed.pdf' }],
   'mumtaz-city': [{ img: 'mumtaz-city-layout-plan', small: 1400, w: 3600, h: 2306, title: 'Mumtaz City layout plan', credit: 'Official layout plan, Mumtaz City (mumtazcity.com). Newer blocks such as the Extension Block may not appear on it', pdf: 'https://mumtazcity.com/wp-content/uploads/2016/06/mumtazcity_masterplan.pdf', live: ['https://www.zameen.com/plotfinder/Islamabad-29/Mumtaz-City-648/', 'Find a plot on the interactive map (Zameen Plot Finder)'] }],
-  'pechs-islamabad': [{ img: 'pechs-k-m-block', small: 1000, w: 2000, h: 2667, title: 'PECHS K & M Block plan', credit: 'Town plan of K & M Block, Fateh Jang Road (town planner: Plnr. M. Kashif Chaudhary), with plot typology from 25×50 to 75×100' }],
+  // The full society map the client linked (manahilestate.com) carries that agency's logo, phones and office, so the
+  // whole society is shown through Zameen's interactive Plot Finder (every block, C & K Extension included) instead.
+  'pechs-islamabad': [{ img: 'pechs-k-m-block', small: 1000, w: 2000, h: 2667, title: 'PECHS K & M Block plan', credit: 'Town plan of K & M Block, Fateh Jang Road (town planner: Plnr. M. Kashif Chaudhary), with plot typology from 25×50 to 75×100', live: ['https://www.zameen.com/plotfinder/Islamabad-29/PECHS-Housing-Society-588/', 'Full society map: all blocks, A to M (Zameen Plot Finder)'] }],
 };

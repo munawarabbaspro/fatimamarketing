@@ -75,8 +75,11 @@ Source videos, PDFs and photos live in the repo root (`../`).
 ### Plot prices, plot offers & master plans
 Edit `src/data/prices.mjs`: `priceGuides` (per society: block, plot, min, max in lakh, note), `plotOffers` (e.g. the Mumtaz City 5 Marla offer; posters in `src/static/assets/offers/`) and `societyMaps` (images in `src/static/assets/maps/`, originals in `tools/src-assets/maps/`). The society pages, the home "Latest plot prices" cards, the payment-plans page, FAQs and structured data all update on the next build. `node tools/uat/check_plans.mjs` checks every figure.
 
+### Payment plans page (by society)
+`/payment-plans/` shows a society picker and one panel per society; choosing a society shows only its plan (`/payment-plans/#soc-<slug>` links straight to it). Panels are built from the data files: Capital Smart City from `plans.mjs`, Mumtaz City from `prices.mjs` (offer) + `inventory.mjs` (apartments), Top City-1 and PECHS from `prices.mjs`, and every other society from its facts, sizes and any payment-plan video in `projects.mjs`. The first four societies in the picker are set by `PLAN_FIRST` in `build.mjs`; when a developer plan arrives for another society, add it to `plans.mjs`, list it in that society's `plans`, and its panel shows the calculator automatically.
+
 ### Available units (The Pearl & ICON VIII)
-Edit `src/data/inventory.mjs`: one row per unit (sheet number, tower, type, unit, floor, size, rate, total, booking, possession, instalments, monthly, quarterly). Delete a row when a unit is sold; the home tiles, the Mumtaz City list and the payment-plans tiles update on the next build. Put the developer's sheet for a new unit in `src/static/assets/units/unit-NN.webp`. `node tools/uat/check_plans.mjs` verifies every figure.
+Edit `src/data/inventory.mjs`: one row per unit (sheet number, tower, type, unit, floor, size, rate, total, booking, possession, instalments, monthly, quarterly). Delete a row when a unit is sold; the home tiles, the Mumtaz City list and the Mumtaz City panel of the payment-plans page (plan tabs + full unit table) update on the next build. Put the developer's sheet for a new unit in `src/static/assets/units/unit-NN.webp`. `node tools/uat/check_plans.mjs` verifies every figure.
 
 ### Swapping photos or adding a society photo
 1. Find a frame: `python tools/grab_site_frames.py ./frames kingdom-valley`, then open `frames/_kingdom-valley.jpg`.

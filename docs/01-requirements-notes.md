@@ -162,7 +162,21 @@ Data: `website/src/data/prices.mjs` (one place for every figure; `check_plans.mj
 | **Top City-1 master plan** (partial revised layout, Dynast Associates, RDA-approved) | topcity-1.com official PDF (client link) | Top City-1 page "Master plan" (enlarge, full size, official PDF) |
 | **Mumtaz City layout plan** (3,484 kanal) + link to Zameen Plot Finder | mumtazcity.com official PDF; Zameen link from the client (not copied: Zameen watermark) | Mumtaz City page "Master plan" |
 | **PECHS K & M Block plan** | manahilestate.com link from the client (town plan by Plnr. M. Kashif Chaudhary) | PECHS page "Master plan" |
-| Full PECHS society map (manahilestate.com) | Client link | **Not used**: it carries another agency's logo, phone numbers and office address (would send buyers to a competitor) |
-| royalmissionhomeservices.com | Client link | **Not used**: a Dubai home-renovation company with no connection to Fatima Marketing or Islamabad real estate |
+| Full PECHS society map (manahilestate.com) | Client link | **Image not copied**: it carries another agency's logo, phone numbers and F-10 office (a competitor), and removing their branding from their artwork is not acceptable. The whole society (blocks A to M, C- and K-Extension) is shown instead through **Zameen's interactive Plot Finder** (`zameen.com/plotfinder/Islamabad-29/PECHS-Housing-Society-588/`), linked from the PECHS master plan and the payment-plans page, like Mumtaz City. Zameen's own static PECHS map is only 750 px wide, too small to use |
+| royalmissionhomeservices.com | Client link | **Not used** (re-checked 18 Nov at the user's request: "might have some connection to Top City"): Royal Mission / Arkanalhadid is a building-maintenance and renovation company in Deira, Dubai (+971, CEO Muhammad Uzair, GM Muhammad Hassan Zahid). Its pages, media library and sitemap have nothing on Top City, Islamabad or real estate, and a web search found no link either. User: "miss the royalmissionhomes" |
 
 Originals kept in `website/tools/src-assets/maps/`.
+
+## 12. Payment plans by society (18 Nov 2026)
+
+User: "on selecting the payment plan each city should show its own payment plan accordingly". The payment-plans page is now organised by society:
+
+- **Society picker** under the page header: 4 tiles for the societies with plans or prices on file (Capital Smart City, Mumtaz City, Top City-1, PECHS) and name chips for the other 10. Choosing one shows **only that society's panel**; the address becomes `/payment-plans/#soc-<slug>` (shareable), and the side form switches its Project to that society.
+- **Capital Smart City**: the 13 developer plans (size tabs, exact split, original schedules, terms).
+- **Mumtaz City**: the Extension Block 5 Marla offer in the same calculator layout (Rs 55 Lac = Rs 30 Lac down + 6 × Rs 416,667; both posters), the developer's 5-year apartment plan for The Pearl & ICON VIII (a tab per unit type with its lowest-priced unit, and a table of all 16 units), and the layout plan.
+- **Top City-1 / PECHS**: block guide and price list, master plan(s) with the official PDF / Zameen Plot Finder, and the Top City-1 "25% on booking" video.
+- **Other 10 societies**: key facts, what can be booked (sizes), the society's payment-plan or booking video where one exists (AGG, Kingdom Valley, Blue World City), and request-the-latest-plan buttons (form + WhatsApp).
+- Deep links keep working: `/payment-plans/#overseas-east-residential` (home plan cards) opens Capital Smart City at that plan. Without JavaScript every panel is shown and the picker works as jump links.
+- Home "Payment plans" section links straight to each society's panel.
+- Checked by `tools/uat/uat.py` (J10, 8 checks).
+

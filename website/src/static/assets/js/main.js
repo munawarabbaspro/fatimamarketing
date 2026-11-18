@@ -143,6 +143,32 @@
     });
   });
 
+  // ---------- payment plans: society picker (one society's plans at a time) ----------
+  // Panels are all in the HTML (no JS: jump links). Deep links work for #soc-<slug> and any id inside a panel,
+  // e.g. /payment-plans/#overseas-east-residential from the home-page plan cards.
+  const pick = $('[data-socpick]'), panels = $$('[data-soc-panel]');
+  if (pick && panels.length) {
+    const links = $$('[data-soc]', pick), side = $('#enquire select[name="project"]');
+    const show = (slug) => {
+      panels.forEach((p) => { p.hidden = p.dataset.socPanel !== slug; });
+      links.forEach((a) => { const on = a.dataset.soc === slug; a.classList.toggle('is-on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+      const name = (panels.find((p) => p.dataset.socPanel === slug) || {}).dataset?.name;
+      if (side && name && [...side.options].some((o) => o.value === name)) side.value = name;
+    };
+    const target = (hash) => { let el = null; try { el = hash.length > 1 && document.getElementById(decodeURIComponent(hash.slice(1))); } catch (_) {} const p = el && el.closest('[data-soc-panel]'); return p ? { p, el } : null; };
+    const open = (hash) => { const t = target(hash); if (!t) return false; show(t.p.dataset.socPanel); t.el.scrollIntoView(); return true; };
+    pick.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-soc]'); if (!a) return;
+      e.preventDefault(); show(a.dataset.soc); history.replaceState(null, '', '#soc-' + a.dataset.soc);
+      const p = document.getElementById('soc-' + a.dataset.soc), top = p.getBoundingClientRect().top;
+      if (top < 0 || top > innerHeight * 0.55) p.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      p.focus({ preventScroll: true });
+      track('plan_society', { society: a.dataset.soc });
+    });
+    addEventListener('hashchange', () => { const t = target(location.hash); if (t && t.p.hidden) open(location.hash); });
+    if (!open(location.hash)) show(panels[0].dataset.socPanel);
+  }
+
   // ---------- YouTube: inline facade (cards), featured player, modal ----------
   const toFrame = (el, id, title) => { let host = el; if (el.tagName === 'BUTTON') { host = document.createElement('div'); host.className = el.className; el.replaceWith(host); } host.replaceChildren(ytFrame(id, title)); return host; };
   document.addEventListener('click', (e) => {
